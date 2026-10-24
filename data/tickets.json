@@ -1,5 +1,101 @@
 [
   {
+    "ticketId": "AMC-2026-1265",
+    "createdAt": "2026-10-24T12:55:07.590Z",
+    "updatedAt": "2026-10-24T12:55:07.590Z",
+    "category": "pothole",
+    "issueTitle": "Dangerous Road Surface Crater  Bitumen Fracture",
+    "description": "Detected large asphalt cavity approx 50-80cm depth on arterial transit corridor. Acute hazard for commuters.",
+    "severity": "CRITICAL",
+    "hazardFactor": "High risk of vehicular collision and rider displacement",
+    "detectedObjects": [
+      "pothole",
+      "broken bitumen",
+      "sub-base exposure"
+    ],
+    "location": {
+      "area": "CG Road, Navrangpura",
+      "wardId": "W-01",
+      "wardName": "Navrangpura",
+      "zone": "West Zone",
+      "office": "Navrangpura Ward Office, Stadium Road",
+      "contact": "+91-79-2640-1001"
+    },
+    "department": {
+      "id": "DEPT_ROADS",
+      "name": "Roads & Bridges Project Department",
+      "officer": "Executive Engineer (Civil/Roads)",
+      "escalationLevel": "Deputy Municipal Commissioner (Engineering)"
+    },
+    "status": "FILED",
+    "slaHours": 48,
+    "eta": "2026-10-26T12:55:07.590Z",
+    "timeline": [
+      {
+        "status": "FILED",
+        "timestamp": "2026-10-24T12:55:07.590Z",
+        "note": "AI Agent registered grievance into Navrangpura Civic Desk. Routed to Roads & Bridges Project Department."
+      }
+    ],
+    "socialPost": {
+      "text": "🚨 AMC Grievance #AMC-2026-1265: Dangerous Road Surface Crater  Bitumen Fracture at CG Road, Navrangpura (West Zone). Urgent municipal action requested! cc: @AmdavadAMC @AMC_Roads @RameshPatel_AMC #CivicLens #AhmedabadFirst",
+      "tags": [
+        "@AmdavadAMC",
+        "@AMC_Roads",
+        "@RameshPatel_AMC"
+      ],
+      "tweetUrl": "https://twitter.com/intent/tweet?text=%F0%9F%9A%A8%20AMC%20Grievance%20%23AMC-2026-1265%3A%20Dangerous%20Road%20Surface%20Crater%20%20Bitumen%20Fracture%20at%20CG%20Road%2C%20Navrangpura%20(West%20Zone).%20Urgent%20municipal%20action%20requested!%20cc%3A%20%40AmdavadAMC%20%40AMC_Roads%20%40RameshPatel_AMC%20%23CivicLens%20%23AhmedabadFirst"
+    }
+  },
+  {
+    "ticketId": "AMC-2026-7894",
+    "createdAt": "2026-10-24T12:43:47.529Z",
+    "updatedAt": "2026-10-24T12:43:47.529Z",
+    "category": "water_logging",
+    "issueTitle": "Severe Water Logging on Sub-Artery",
+    "description": "Stagnant wastewater pooling exceeding 15-20cm depth due to clogged storm inlet grates; obstructing public transit flow.",
+    "severity": "CRITICAL",
+    "hazardFactor": "Mosquito breeding vector, vehicle stall hazard, foundation erosion",
+    "detectedObjects": [
+      "stagnant water pool",
+      "submerged curb",
+      "sediment clogged grate"
+    ],
+    "location": {
+      "area": "Maninagar, Kankaria Road",
+      "wardId": "W-03",
+      "wardName": "Maninagar",
+      "zone": "South Zone",
+      "office": "Maninagar Ward Office, Kankaria South",
+      "contact": "+91-79-2546-3003"
+    },
+    "department": {
+      "id": "DEPT_DRAINAGE",
+      "name": "Water Drainage & Sewerage Department",
+      "officer": "Executive Engineer (Drainage)",
+      "escalationLevel": "City Engineer (Water & Drainage)"
+    },
+    "status": "FILED",
+    "slaHours": 36,
+    "eta": "2026-10-26T00:43:47.529Z",
+    "timeline": [
+      {
+        "status": "FILED",
+        "timestamp": "2026-10-24T12:43:47.529Z",
+        "note": "AI Agent registered complaint directly into Maninagar Ward Civic Desk. Routed to Water Drainage & Sewerage Department."
+      }
+    ],
+    "socialPost": {
+      "text": "🚨 AMC Grievance Alert #AMC-2026-7894: Severe Water Logging on Sub-Artery reported at Maninagar, Kankaria Road (South Zone). Immediate intervention requested! cc: @AmdavadAMC @AMC_Drainage @KiritShah_AMC #CivicLens #AhmedabadMunicipal #CitizenFirst",
+      "tags": [
+        "@AmdavadAMC",
+        "@AMC_Drainage",
+        "@KiritShah_AMC"
+      ],
+      "tweetUrl": "https://twitter.com/intent/tweet?text=%F0%9F%9A%A8%20AMC%20Grievance%20Alert%20%23AMC-2026-7894%3A%20Severe%20Water%20Logging%20on%20Sub-Artery%20reported%20at%20Maninagar%2C%20Kankaria%20Road%20(South%20Zone).%20Immediate%20intervention%20requested!%20cc%3A%20%40AmdavadAMC%20%40AMC_Drainage%20%40KiritShah_AMC%20%23CivicLens%20%23AhmedabadMunicipal%20%23CitizenFirst"
+    }
+  },
+  {
     "ticketId": "AMC-2026-8941",
     "createdAt": "2026-10-23T10:15:00.000Z",
     "updatedAt": "2026-10-24T09:30:00.000Z",
@@ -40,7 +136,11 @@
     "eta": "2026-10-25T10:15:00.000Z",
     "socialPost": {
       "text": "📢 Grievance Filed #AMC-2026-8941: Deep pothole on Sindhu Bhavan Road! Requesting swift action from @AmdavadAMC @AMC_Roads & Corporator @BhavnaDave_AMC #CivicLens #AhmedabadRoads",
-      "tags": ["@AmdavadAMC", "@AMC_Roads", "@BhavnaDave_AMC"]
+      "tags": [
+        "@AmdavadAMC",
+        "@AMC_Roads",
+        "@BhavnaDave_AMC"
+      ]
     }
   },
   {
@@ -84,7 +184,11 @@
     "eta": "Completed",
     "socialPost": {
       "text": "🚨 Swachhata Alert #AMC-2026-7822: Mixed garbage accumulation near CG Road Market cleared! cc: @AmdavadAMC @SwachhAhmedabad @RameshPatel_AMC #CleanAhmedabad",
-      "tags": ["@AmdavadAMC", "@SwachhAhmedabad", "@RameshPatel_AMC"]
+      "tags": [
+        "@AmdavadAMC",
+        "@SwachhAhmedabad",
+        "@RameshPatel_AMC"
+      ]
     }
   }
 ]
