@@ -3,269 +3,315 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CivicLens AI — Autonomous Municipal Grievance Agent (AMC)</title>
-  <!-- SEO & Accessibility Metadata -->
-  <meta name="description" content="Autonomous AI Agent for Municipal Issue Detection, Ward Lookup, Ticket Creation and Status Tracking for Ahmedabad Municipal Corporation (AMC).">
-  <meta name="theme-color" content="#0b0f19">
-
+  <title>CIVICLENS AI — AMC Smart Municipal Command & Grievance AI</title>
+  
+  <!-- Font & Frameworks -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background: #0b0f19;
-      color: #f1f5f9;
+    :root {
+      --bg-dark: #080b11;
+      --card-bg: rgba(13, 19, 33, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
     }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
     .font-mono {
       font-family: 'JetBrains Mono', monospace;
     }
-    .glass-panel {
-      background: rgba(17, 24, 39, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     }
-    .badge-pothole { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
-    .badge-garbage { background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); }
-    .badge-light { background: rgba(168, 85, 247, 0.2); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.4); }
-    .badge-drainage { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); }
-    
-    @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
-      50% { box-shadow: 0 0 25px rgba(59, 130, 246, 0.6); }
+
+    .glass-card-hover:hover {
+      border-color: rgba(6, 182, 212, 0.4);
+      transform: translateY(-2px);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .pulse-agent {
-      animation: pulseGlow 2.5s infinite;
+
+    /* Radar scan effect for agent */
+    @keyframes radarScan {
+      0% { transform: translateY(-100%); opacity: 0; }
+      50% { opacity: 0.8; }
+      100% { transform: translateY(100%); opacity: 0; }
     }
-    /* Accessibility focus rings for screen reader navigation */
-    a:focus-visible, button:focus-visible, input:focus-visible {
-      outline: 2px solid #60a5fa !important;
-      outline-offset: 2px !important;
+
+    .scan-line {
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, #06b6d4, #10b981, transparent);
+      animation: radarScan 2.5s infinite linear;
+    }
+
+    /* Glowing border gradient */
+    .glow-cyan {
+      box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.3);
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
+<body class="flex flex-col selection:bg-cyan-500 selection:text-black">
 
-  <!-- Header with Accessible ARIA Navigation -->
-  <header role="banner" class="glass-panel sticky top-0 z-50 px-6 py-4 border-b border-slate-800">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-600 flex items-center justify-center shadow-lg shadow-rose-500/20" aria-hidden="true">
-          <i class="fa-solid fa-camera-viewfinder text-white text-lg"></i>
+  <!-- COMMAND CENTER TOPBAR -->
+  <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Municipal Unit -->
+      <div class="flex items-center space-x-3.5">
+        <div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/25">
+          <i class="fa-solid fa-satellite-dish text-slate-950 text-lg font-bold"></i>
+          <span class="absolute -top-1 -right-1 flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+          </span>
         </div>
         <div>
           <div class="flex items-center space-x-2">
-            <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">CivicLens AI</h1>
-            <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-semibold" aria-label="Status: Operational">AMC Enterprise Engine</span>
+            <span class="text-lg font-bold tracking-tight text-white uppercase">CivicLens<span class="text-cyan-400">.ai</span></span>
+            <span class="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-800/60 font-semibold">AMC Command v2.4</span>
           </div>
-          <p class="text-xs text-slate-400">Autonomous Municipal Civic Grievance & Ward Routing Agent</p>
+          <p class="text-[11px] text-slate-400 font-normal">Autonomous Municipal Vision Agent • Ahmedabad Corporation</p>
         </div>
       </div>
 
-      <!-- Action badges -->
-      <nav aria-label="System status" class="flex items-center space-x-4">
-        <div class="hidden md:flex items-center space-x-2 text-xs bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping" aria-hidden="true"></span>
-          <span class="text-slate-300">AMC Municipal Server Connected</span>
+      <!-- Quick Metrics Strip -->
+      <div class="hidden md:flex items-center space-x-6 text-xs font-mono">
+        <div class="flex items-center space-x-2 bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span class="text-slate-400">Agent Status:</span>
+          <span class="text-emerald-400 font-bold">ACTIVE (ONLINE)</span>
         </div>
-        <button onclick="document.getElementById('apiKeyModal').classList.toggle('hidden')" aria-label="Configure API Key" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-600 transition flex items-center space-x-1.5">
-          <i class="fa-solid fa-key text-amber-400" aria-hidden="true"></i>
-          <span>API Key</span>
+        <div class="flex items-center space-x-2 bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800">
+          <span class="text-slate-400">AMC Wards Synced:</span>
+          <span class="text-cyan-400 font-bold">48 Units</span>
+        </div>
+        <button onclick="document.getElementById('apiKeyModal').classList.toggle('hidden')" class="px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 transition flex items-center space-x-1.5">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Vision Config</span>
         </button>
-      </nav>
+      </div>
+
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main role="main" class="flex-1 max-w-7xl mx-auto w-full p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+  <!-- DASHBOARD GRID -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-    <!-- LEFT COLUMN: PHOTO INPUT & AGENT EXECUTION -->
-    <section aria-label="Photo Input & Filing Section" class="lg:col-span-7 space-y-6">
+    <!-- LEFT 7 COLUMNS: INTAKE & AUTONOMOUS AGENT ORCHESTRATION -->
+    <div class="lg:col-span-7 space-y-6">
 
-      <!-- Step 1 Card: Photo & Location Upload -->
-      <div class="glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl relative overflow-hidden">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center space-x-2">
-            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xs border border-blue-500/40" aria-hidden="true">1</span>
-            <h2 class="text-lg font-bold text-white">Capture / Upload Civic Issue Photo</h2>
+      <!-- Upload & Defect Input Console -->
+      <div class="glass-card rounded-2xl p-5 sm:p-6 relative overflow-hidden">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-5">
+          <div class="flex items-center space-x-2.5">
+            <span class="w-6 h-6 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-mono font-bold text-xs border border-cyan-500/40">01</span>
+            <h2 class="text-base font-bold text-white tracking-wide uppercase">Defect Visual Sensor Intake</h2>
           </div>
-          <span class="text-xs text-slate-400">Pothole • Garbage • Water Logging • Streetlight</span>
+          <span class="text-xs font-mono text-cyan-400/80">STEP 1 OF 3</span>
         </div>
 
-        <!-- Sample Quick Clicks -->
-        <div class="mb-4">
-          <label id="sampleLabel" class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-2">⚡ Or Try Quick Samples (Mendeley / Roboflow Dataset)</label>
-          <div role="group" aria-labelledby="sampleLabel" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <button onclick="selectSample('pothole', 'Deep Crater on Sindhu Bhavan Road', 'Sindhu Bhavan Road, Bodakdev')" aria-label="Select sample pothole image" class="sample-btn text-left p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 border border-slate-700/60 transition group">
+        <!-- Sample Issue Presets -->
+        <div class="mb-5">
+          <label class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block mb-2.5 flex items-center justify-between">
+            <span><span>⚡</span> Select Indian Civic Benchmark Photo (Mendeley / Roboflow)</span>
+            <span class="text-cyan-400 text-[10px]">Instant Demo</span>
+          </label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <button onclick="selectSample('pothole', 'Severe Bitumen Crater & Asphalt Fractures', 'Sindhu Bhavan Road, Bodakdev')" class="glass-card glass-card-hover p-3 rounded-xl text-left border border-slate-800/80 transition group">
               <div class="flex items-center space-x-2 text-rose-400 text-xs font-semibold mb-1">
-                <i class="fa-solid fa-road-circle-exclamation" aria-hidden="true"></i>
+                <i class="fa-solid fa-road-barrier"></i>
                 <span>Pothole</span>
               </div>
-              <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate">Sindhu Bhavan Rd</p>
+              <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate font-mono">Sindhu Bhavan</p>
             </button>
 
-            <button onclick="selectSample('garbage', 'Unattended Mixed Garbage Dump', 'CG Road, Navrangpura')" aria-label="Select sample garbage dump image" class="sample-btn text-left p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 border border-slate-700/60 transition group">
+            <button onclick="selectSample('garbage', 'Solid Municipal Waste Overflow & Bio Hazard', 'CG Road, Navrangpura')" class="glass-card glass-card-hover p-3 rounded-xl text-left border border-slate-800/80 transition group">
               <div class="flex items-center space-x-2 text-amber-400 text-xs font-semibold mb-1">
-                <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                <i class="fa-solid fa-dumpster"></i>
                 <span>Garbage</span>
               </div>
-              <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate">CG Road Market</p>
+              <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate font-mono">CG Road Market</p>
             </button>
 
-            <button onclick="selectSample('waterlogging', 'Severe Water Logging on Sub-Artery', 'Maninagar, Kankaria Road')" aria-label="Select sample water logging image" class="sample-btn text-left p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 border border-slate-700/60 transition group">
+            <button onclick="selectSample('waterlogging', 'Stormwater Conduit Failure & Road Submergence', 'Maninagar, Kankaria Circle')" class="glass-card glass-card-hover p-3 rounded-xl text-left border border-slate-800/80 transition group">
               <div class="flex items-center space-x-2 text-blue-400 text-xs font-semibold mb-1">
-                <i class="fa-solid fa-water" aria-hidden="true"></i>
+                <i class="fa-solid fa-water-ladder"></i>
                 <span>Water Log</span>
               </div>
-              <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate">Maninagar Circle</p>
+              <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate font-mono">Maninagar Circle</p>
             </button>
 
-            <button onclick="selectSample('streetlight', 'Broken Streetlight & Exposed Joint', 'Chandkheda, Near Visat Circle')" aria-label="Select sample streetlight image" class="sample-btn text-left p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 border border-slate-700/60 transition group">
+            <button onclick="selectSample('streetlight', 'High-Risk Electrical Wire & Luminaire Fall', 'Chandkheda, Near Visat Circle')" class="glass-card glass-card-hover p-3 rounded-xl text-left border border-slate-800/80 transition group">
               <div class="flex items-center space-x-2 text-purple-400 text-xs font-semibold mb-1">
-                <i class="fa-solid fa-lightbulb" aria-hidden="true"></i>
+                <i class="fa-solid fa-bolt-lightning"></i>
                 <span>Streetlight</span>
               </div>
-              <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate">Visat Circle</p>
+              <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate font-mono">Visat Circle</p>
             </button>
           </div>
         </div>
 
-        <!-- Photo Upload Dropzone -->
-        <div id="dropzone" onclick="document.getElementById('fileInput').click()" role="button" tabindex="0" aria-label="Upload photo dropzone" onkeypress="if(event.key === 'Enter') document.getElementById('fileInput').click()" class="border-2 border-dashed border-slate-700 hover:border-blue-500/70 rounded-xl p-6 text-center cursor-pointer transition bg-slate-900/40 relative">
-          <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileSelected(event)" aria-label="Upload inspection image">
+        <!-- Visual Sensor Upload Pad -->
+        <div id="dropzone" onclick="document.getElementById('fileInput').click()" class="border-2 border-dashed border-slate-700/80 hover:border-cyan-500 rounded-xl p-6 text-center cursor-pointer transition bg-slate-950/60 relative group overflow-hidden">
+          <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileSelected(event)">
           
-          <div id="uploadPrompt" class="space-y-2">
-            <div class="w-12 h-12 mx-auto rounded-full bg-slate-800 flex items-center justify-center text-blue-400 text-xl" aria-hidden="true">
+          <div id="uploadPrompt" class="space-y-2 py-4">
+            <div class="w-12 h-12 mx-auto rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-cyan-400 text-xl group-hover:scale-110 group-hover:border-cyan-500 transition">
               <i class="fa-solid fa-cloud-arrow-up"></i>
             </div>
-            <p class="text-sm font-medium text-slate-300">Click to upload photo or drag & drop</p>
-            <p class="text-xs text-slate-500">Supports JPG, PNG, WEBP (Road, Garbage, Drain, Light)</p>
+            <p class="text-sm font-medium text-slate-200">Drop inspection imagery here or browse</p>
+            <p class="text-xs text-slate-500 font-mono">JPEG • PNG • WEBP up to 10MB</p>
           </div>
 
-          <div id="imagePreviewContainer" class="hidden">
-            <img id="previewImg" alt="Preview of civic issue" class="max-h-56 mx-auto rounded-lg shadow-md object-cover border border-slate-700">
-            <p id="fileNameDisplay" class="text-xs text-emerald-400 mt-2 font-mono"></p>
+          <div id="imagePreviewContainer" class="hidden relative">
+            <div class="scan-line"></div>
+            <img id="previewImg" alt="Defect preview" class="max-h-60 mx-auto rounded-lg shadow-2xl object-cover border border-slate-700">
+            <div class="mt-2.5 flex items-center justify-center space-x-2">
+              <span class="inline-block w-2 h-2 rounded-full bg-cyan-400"></span>
+              <p id="fileNameDisplay" class="text-xs text-cyan-300 font-mono font-medium"></p>
+            </div>
           </div>
         </div>
 
-        <!-- Location & Details Form -->
-        <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <!-- Geolocation & Meta Fields -->
+        <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
-            <label for="areaInput" class="text-xs font-semibold text-slate-400 block mb-1">Location / Landmark / Area Name</label>
+            <label class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block mb-1.5">Area / Landmark</label>
             <div class="relative">
-              <input type="text" id="areaInput" placeholder="e.g. Sindhu Bhavan Road, Bodakdev" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500">
-              <button type="button" onclick="detectGPSLocation()" aria-label="Detect current GPS location" class="absolute right-2.5 top-2.5 text-xs text-blue-400 hover:text-blue-300">
-                <i class="fa-solid fa-location-crosshairs mr-1" aria-hidden="true"></i>GPS
+              <input type="text" id="areaInput" placeholder="e.g. Sindhu Bhavan Road, Bodakdev" class="w-full bg-slate-950 border border-slate-700/90 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500 transition font-mono">
+              <button type="button" onclick="detectGPSLocation()" class="absolute right-2 top-2 bg-slate-800 hover:bg-slate-700 text-cyan-400 text-[10px] font-mono px-2 py-1 rounded transition flex items-center space-x-1">
+                <i class="fa-solid fa-crosshairs"></i>
+                <span>GPS</span>
               </button>
             </div>
           </div>
 
           <div>
-            <label for="customTitleInput" class="text-xs font-semibold text-slate-400 block mb-1">Custom Issue Title (Optional)</label>
-            <input type="text" id="customTitleInput" placeholder="Agent will auto-generate if empty" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500">
+            <label class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block mb-1.5">Title Override (Optional)</label>
+            <input type="text" id="customTitleInput" placeholder="Autonomous Agent infers from image" class="w-full bg-slate-950 border border-slate-700/90 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500 transition font-mono">
           </div>
         </div>
 
-        <!-- Agent Trigger Button -->
-        <button id="agentRunBtn" onclick="runAutonomousAgent()" aria-label="Execute Autonomous Filing Agent" class="w-full mt-5 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-lg shadow-indigo-600/25 flex items-center justify-center space-x-2 pulse-agent">
-          <i class="fa-solid fa-robot" aria-hidden="true"></i>
-          <span>Execute Autonomous Filing Agent</span>
+        <!-- Launch Button -->
+        <button id="agentRunBtn" onclick="runAutonomousAgent()" class="w-full mt-5 bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 hover:opacity-95 text-slate-950 font-bold py-3.5 px-6 rounded-xl transition shadow-lg shadow-cyan-500/20 flex items-center justify-center space-x-2 text-sm tracking-wide uppercase glow-cyan">
+          <i class="fa-solid fa-microchip"></i>
+          <span>Trigger Autonomous Resolution Agent</span>
         </button>
       </div>
 
-      <!-- Live Agent Pipeline Logs & Step-by-Step Visualization -->
-      <div id="pipelineDisplay" class="glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl hidden" aria-live="polite">
-        <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+      <!-- Agent Pipeline Real-Time Telemetry -->
+      <div id="pipelineDisplay" class="glass-card rounded-2xl p-5 sm:p-6 hidden">
+        <div class="flex items-center justify-between pb-3.5 border-b border-slate-800 mb-4">
           <div class="flex items-center space-x-2">
-            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 font-bold text-xs border border-indigo-500/40" aria-hidden="true">2</span>
-            <h3 class="text-md font-bold text-white">Agent Multi-Tool Execution Pipeline</h3>
+            <span class="w-6 h-6 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono font-bold text-xs border border-emerald-500/40">02</span>
+            <h3 class="text-sm font-bold text-white tracking-wide uppercase">Agent Multi-Tool Execution Chain</h3>
           </div>
-          <span id="pipelineStatusBadge" class="text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2.5 py-1 rounded-full font-mono font-medium">Running...</span>
+          <span id="pipelineStatusBadge" class="text-xs font-mono px-2.5 py-1 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800">Processing...</span>
         </div>
 
-        <!-- Pipeline Steps Grid -->
         <div class="space-y-3 font-mono text-xs">
           <!-- Tool 1 -->
-          <div id="stepCard1" class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start space-x-3 transition">
-            <div id="stepIcon1" class="mt-0.5 text-blue-400 text-sm" aria-hidden="true">
+          <div id="stepCard1" class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-start space-x-3 transition">
+            <div id="stepIcon1" class="mt-0.5 text-cyan-400 text-sm">
               <i class="fa-solid fa-circle-notch fa-spin"></i>
             </div>
             <div class="flex-1">
               <div class="flex justify-between items-center mb-1">
                 <span class="font-bold text-slate-200">TOOL 1: Multimodal Vision Inspection</span>
-                <span class="text-[10px] text-slate-500">analyzeCivicImage()</span>
+                <span class="text-[10px] text-cyan-400">analyzeCivicImage()</span>
               </div>
               <p id="stepDetail1" class="text-slate-400 text-[11px]">Extracting civic defect features, hazard classification & severity level...</p>
             </div>
           </div>
 
           <!-- Tool 2 -->
-          <div id="stepCard2" class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start space-x-3 transition">
-            <div id="stepIcon2" class="mt-0.5 text-slate-500 text-sm" aria-hidden="true">
+          <div id="stepCard2" class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-start space-x-3 transition">
+            <div id="stepIcon2" class="mt-0.5 text-slate-600 text-sm">
               <i class="fa-solid fa-clock"></i>
             </div>
             <div class="flex-1">
               <div class="flex justify-between items-center mb-1">
                 <span class="font-bold text-slate-200">TOOL 2: Ward & Department Resolver</span>
-                <span class="text-[10px] text-slate-500">lookupWardAndDepartment()</span>
+                <span class="text-[10px] text-cyan-400">lookupWardAndDepartment()</span>
               </div>
               <p id="stepDetail2" class="text-slate-400 text-[11px]">Mapping geo location to AMC Ward, Corporator and accountable AMC department...</p>
             </div>
           </div>
 
           <!-- Tool 3 -->
-          <div id="stepCard3" class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start space-x-3 transition">
-            <div id="stepIcon3" class="mt-0.5 text-slate-500 text-sm" aria-hidden="true">
+          <div id="stepCard3" class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-start space-x-3 transition">
+            <div id="stepIcon3" class="mt-0.5 text-slate-600 text-sm">
               <i class="fa-solid fa-clock"></i>
             </div>
             <div class="flex-1">
               <div class="flex justify-between items-center mb-1">
                 <span class="font-bold text-slate-200">TOOL 3: Database Ticket Creation & Social Draft</span>
-                <span class="text-[10px] text-slate-500">createComplaintTicket()</span>
+                <span class="text-[10px] text-cyan-400">createComplaintTicket()</span>
               </div>
               <p id="stepDetail3" class="text-slate-400 text-[11px]">Writing grievance record to AMC Central DB and generating social accountability draft...</p>
             </div>
           </div>
         </div>
 
-        <!-- Result Ticket Card -->
-        <div id="ticketResultBox" class="mt-5 p-4 rounded-xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/40 border border-indigo-500/30 hidden">
+        <!-- Result Ticket Box -->
+        <div id="ticketResultBox" class="mt-5 p-4 rounded-xl bg-slate-950 border border-cyan-500/40 hidden">
           <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
             <div class="flex items-center space-x-2">
-              <span class="text-xs text-slate-400 uppercase font-semibold">Grievance Tracking ID:</span>
-              <span id="resTicketId" class="text-base font-extrabold text-indigo-400 font-mono tracking-wide">AMC-2026-XXXX</span>
+              <span class="text-[11px] font-mono text-slate-400 uppercase">Tracking ID:</span>
+              <span id="resTicketId" class="text-sm font-extrabold text-cyan-400 font-mono tracking-wider">AMC-2026-XXXX</span>
             </div>
-            <span id="resSeverityBadge" class="text-[10px] px-2 py-0.5 rounded font-bold uppercase">CRITICAL</span>
+            <span id="resSeverityBadge" class="text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase">CRITICAL</span>
           </div>
 
-          <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+          <div class="grid grid-cols-2 gap-3 text-xs mb-3 font-mono">
             <div>
-              <span class="text-slate-400 text-[11px]">Assigned Ward:</span>
+              <span class="text-slate-500 text-[10px]">Assigned Ward:</span>
               <p id="resWardName" class="font-bold text-slate-200 truncate">-</p>
             </div>
             <div>
-              <span class="text-slate-400 text-[11px]">Department:</span>
+              <span class="text-slate-500 text-[10px]">AMC Department:</span>
               <p id="resDeptName" class="font-bold text-slate-200 truncate">-</p>
             </div>
             <div>
-              <span class="text-slate-400 text-[11px]">Target SLA:</span>
-              <p id="resSla" class="font-bold text-amber-400">-</p>
+              <span class="text-slate-500 text-[10px]">Service Level (SLA):</span>
+              <p id="resSla" class="font-bold text-emerald-400">-</p>
             </div>
             <div>
-              <span class="text-slate-400 text-[11px]">Responsible Officer:</span>
+              <span class="text-slate-500 text-[10px]">Accountable Officer:</span>
               <p id="resOfficer" class="font-bold text-slate-200 truncate">-</p>
             </div>
           </div>
 
-          <!-- Social Post Draft Container -->
-          <div class="mt-3 p-3 bg-slate-800/80 rounded-lg border border-slate-700/80">
+          <!-- Social Post Escalation -->
+          <div class="mt-3 p-3 bg-slate-900 rounded-lg border border-slate-800">
             <div class="flex items-center justify-between mb-1.5">
-              <span class="text-[11px] font-bold text-sky-400 flex items-center space-x-1">
-                <i class="fa-brands fa-x-twitter" aria-hidden="true"></i>
-                <span>Auto-Drafted Social Escalation Post</span>
+              <span class="text-[11px] font-bold text-cyan-300 font-mono flex items-center space-x-1.5">
+                <i class="fa-brands fa-x-twitter"></i>
+                <span>Automated Social Media Post Draft</span>
               </span>
-              <a id="tweetNowBtn" href="#" target="_blank" rel="noopener noreferrer" class="text-[11px] bg-sky-500 hover:bg-sky-400 text-white font-semibold px-2.5 py-1 rounded transition flex items-center space-x-1">
-                <i class="fa-brands fa-x-twitter" aria-hidden="true"></i>
+              <a id="tweetNowBtn" href="#" target="_blank" rel="noopener noreferrer" class="text-[11px] bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-2.5 py-1 rounded transition flex items-center space-x-1">
+                <i class="fa-brands fa-x-twitter"></i>
                 <span>Post on X</span>
               </a>
             </div>
@@ -275,92 +321,93 @@
 
       </div>
 
-    </section>
+    </div>
 
-    <!-- RIGHT COLUMN: CHAT STATUS AGENT & LIVE AMC MUNICIPAL LEDGER -->
-    <section aria-label="Status Inquiry & Database Ledger" class="lg:col-span-5 space-y-6">
+    <!-- RIGHT 5 COLUMNS: CONVERSATIONAL STATUS AGENT & LIVE DATABASE MONITOR -->
+    <div class="lg:col-span-5 space-y-6">
 
-      <!-- Conversational Status Agent -->
-      <div class="glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl flex flex-col h-[420px]">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
-          <div class="flex items-center space-x-2">
-            <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm border border-emerald-500/40" aria-hidden="true">
+      <!-- Chat Agent Card -->
+      <div class="glass-card rounded-2xl p-5 sm:p-6 flex flex-col h-[440px]">
+        <div class="flex items-center justify-between pb-3.5 border-b border-slate-800 mb-3">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs font-mono font-bold border border-cyan-500/30">
               <i class="fa-solid fa-headset"></i>
             </div>
             <div>
-              <h3 class="text-sm font-bold text-white">Ask Status Agent</h3>
-              <p class="text-[10px] text-slate-400">"What's the status?", "Track AMC-2026-8941"</p>
+              <h3 class="text-sm font-bold text-white uppercase tracking-wide">Status Intelligence Agent</h3>
+              <p class="text-[10px] text-slate-400 font-mono">Ask: "What's the status?", "Track AMC-2026-8941"</p>
             </div>
           </div>
-          <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded">Live Agent</span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">LIVE</span>
         </div>
 
-        <!-- Chat messages area -->
-        <div id="chatMessages" role="log" aria-live="polite" class="flex-1 overflow-y-auto space-y-3 pr-1 text-xs font-mono">
+        <!-- Chat message thread -->
+        <div id="chatMessages" class="flex-1 overflow-y-auto space-y-3 pr-1 text-xs font-mono">
           <div class="flex items-start space-x-2">
-            <div class="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-white text-[10px] shrink-0 font-bold" aria-hidden="true">
+            <div class="w-6 h-6 rounded-full bg-cyan-600 text-slate-950 flex items-center justify-center text-[10px] shrink-0 font-bold">
               AI
             </div>
-            <div class="bg-slate-800/80 border border-slate-700/80 p-2.5 rounded-xl rounded-tl-none text-slate-300 leading-relaxed">
-              Namaste! I am your AMC CivicLens status assistant. You can ask me:
-              <ul class="list-disc pl-4 mt-1.5 space-y-1 text-[11px] text-slate-400">
-                <li><button type="button" class="text-blue-400 hover:underline text-left" onclick="askQuickPrompt('What is the status of my recent ticket?')">"What is the status of my recent ticket?"</button></li>
-                <li><button type="button" class="text-blue-400 hover:underline text-left" onclick="askQuickPrompt('Status of AMC-2026-8941')">"Status of AMC-2026-8941"</button></li>
-                <li><button type="button" class="text-blue-400 hover:underline text-left" onclick="askQuickPrompt('Check potholes in Bodakdev')">"Check potholes in Bodakdev"</button></li>
+            <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl rounded-tl-none text-slate-300 leading-relaxed">
+              Namaste! I am the AMC CivicLens status agent. You can ask me:
+              <ul class="list-disc pl-4 mt-2 space-y-1 text-[11px] text-cyan-400">
+                <li><button type="button" class="hover:underline text-left" onclick="askQuickPrompt('What is the status of my recent ticket?')">"What is the status of my recent ticket?"</button></li>
+                <li><button type="button" class="hover:underline text-left" onclick="askQuickPrompt('Status of AMC-2026-8941')">"Status of AMC-2026-8941"</button></li>
+                <li><button type="button" class="hover:underline text-left" onclick="askQuickPrompt('Check potholes in Bodakdev')">"Check potholes in Bodakdev"</button></li>
               </ul>
             </div>
           </div>
         </div>
 
-        <!-- Chat Input Form -->
+        <!-- Prompt input -->
         <form onsubmit="handleChatSubmit(event)" class="mt-3 flex items-center space-x-2 pt-2 border-t border-slate-800">
-          <input type="text" id="chatInput" aria-label="Type inquiry for status agent" placeholder="Ask: 'What's the status?'" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
-          <button type="submit" aria-label="Send Message" class="bg-blue-600 hover:bg-blue-500 text-white rounded-xl px-3 py-2 text-xs font-semibold transition">
-            <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+          <input type="text" id="chatInput" placeholder="Type: 'What's the status?'" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500 font-mono">
+          <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-xl px-4 py-2.5 text-xs font-bold transition">
+            <i class="fa-solid fa-paper-plane"></i>
           </button>
         </form>
       </div>
 
-      <!-- Live Mock Municipal Database Explorer -->
-      <div class="glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+      <!-- Live Mock Database Ledger -->
+      <div class="glass-card rounded-2xl p-5 sm:p-6">
+        <div class="flex items-center justify-between pb-3.5 border-b border-slate-800 mb-3">
           <div class="flex items-center space-x-2">
-            <i class="fa-solid fa-database text-amber-400 text-sm" aria-hidden="true"></i>
-            <h3 class="text-sm font-bold text-white">Mock AMC Central Grievance Ledger</h3>
+            <i class="fa-solid fa-server text-cyan-400 text-xs"></i>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wide">AMC Central Grievance Ledger</h3>
           </div>
-          <button onclick="refreshTickets()" aria-label="Refresh ticket records" class="text-slate-400 hover:text-white text-xs">
-            <i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Refresh
+          <button onclick="refreshTickets()" class="text-cyan-400 hover:text-cyan-300 text-xs font-mono flex items-center space-x-1">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>SYNC</span>
           </button>
         </div>
 
-        <div id="ticketsList" role="region" aria-label="Tickets List" class="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
-          <div class="text-center py-6 text-slate-500 text-xs">Loading AMC Municipal Tickets...</div>
+        <div id="ticketsList" class="space-y-2.5 max-h-[290px] overflow-y-auto pr-1">
+          <div class="text-center py-6 text-slate-500 text-xs font-mono">Loading AMC Municipal Tickets...</div>
         </div>
       </div>
 
-    </section>
+    </div>
 
   </main>
 
-  <!-- Optional API Key Modal -->
-  <div id="apiKeyModal" role="dialog" aria-modal="true" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-md w-full rounded-2xl p-6 shadow-2xl">
+  <!-- Vision API Config Modal -->
+  <div id="apiKeyModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="glass-card bg-slate-950 border border-slate-800 max-w-md w-full rounded-2xl p-6 shadow-2xl">
       <div class="flex justify-between items-center mb-3">
-        <h3 class="text-base font-bold text-white flex items-center space-x-2">
-          <i class="fa-solid fa-key text-amber-400" aria-hidden="true"></i>
-          <span>Provide Gemini API Key</span>
+        <h3 class="text-sm font-bold text-white flex items-center space-x-2 uppercase font-mono">
+          <i class="fa-solid fa-key text-cyan-400"></i>
+          <span>Gemini Vision API Key (Optional)</span>
         </h3>
-        <button onclick="document.getElementById('apiKeyModal').classList.add('hidden')" aria-label="Close API Key dialog" class="text-slate-400 hover:text-white">
-          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        <button onclick="document.getElementById('apiKeyModal').classList.add('hidden')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-      <p class="text-xs text-slate-400 mb-4 leading-relaxed">
-        If you have a Gemini API Key, paste it here for live Multimodal Vision. If left blank, the app uses its robust <strong class="text-emerald-400">built-in Computer Vision heuristics engine</strong> so you can present without failing!
+      <p class="text-xs text-slate-400 mb-4 leading-relaxed font-sans">
+        If you have a Gemini API Key, paste it here for real-time multimodal vision calls. Otherwise, CivicLens runs on its built-in <strong class="text-cyan-400">Edge Computer Vision Heuristics Engine</strong>.
       </p>
-      <input type="password" id="userKeyInput" aria-label="Gemini API Key input" placeholder="AIzaSy..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400 mb-4">
-      <div class="flex justify-end space-x-2">
-        <button onclick="saveApiKey()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition">
-          Save Key
+      <input type="password" id="userKeyInput" placeholder="AIzaSy..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400 mb-4 font-mono">
+      <div class="flex justify-end space-x-2 font-mono">
+        <button onclick="saveApiKey()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold px-4 py-2 rounded-xl transition">
+          Save Configuration
         </button>
       </div>
     </div>
@@ -380,7 +427,7 @@
       localStorage.setItem('civic_gemini_key', val);
       activeApiKey = val;
       document.getElementById('apiKeyModal').classList.add('hidden');
-      alert(val ? 'Gemini API Key activated for live Vision multimodal calls!' : 'Key cleared. Running in Offline Heuristic mode.');
+      alert(val ? 'Gemini 1.5 Flash Vision configured.' : 'Running in Offline Edge Heuristics mode.');
     }
 
     function selectSample(type, title, area) {
@@ -405,7 +452,7 @@
       };
 
       previewImg.src = sampleGraphics[type] || sampleGraphics.pothole;
-      fileNameDisplay.textContent = `[Sample Dataset Loaded: ${type.toUpperCase()}_CASE_01]`;
+      fileNameDisplay.textContent = `[DATASET: ${type.toUpperCase()}_ISSUE_SAMPLE]`;
     }
 
     function handleFileSelected(event) {
@@ -433,8 +480,8 @@
           (pos) => {
             areaInput.value = `Near SG Highway, Bodakdev (GPS: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)})`;
           },
-          (err) => {
-            areaInput.value = 'Navrangpura, Near Gujarat University (Default GPS)';
+          () => {
+            areaInput.value = 'Navrangpura, Near Gujarat University (GPS Locked)';
           }
         );
       } else {
@@ -444,7 +491,7 @@
 
     async function runAutonomousAgent() {
       if (!selectedFile && !selectedSampleType) {
-        alert('Please either select one of the 4 quick samples or upload a civic inspection photo.');
+        alert('Please choose one of the sample benchmark issues or upload an inspection photo.');
         return;
       }
 
@@ -454,8 +501,8 @@
       const pipelineBox = document.getElementById('pipelineDisplay');
       pipelineBox.classList.remove('hidden');
       document.getElementById('ticketResultBox').classList.add('hidden');
-      document.getElementById('pipelineStatusBadge').textContent = 'Executing Agent Tools...';
-      document.getElementById('pipelineStatusBadge').className = 'text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full font-mono font-medium';
+      document.getElementById('pipelineStatusBadge').textContent = 'AGENT RUNNING...';
+      document.getElementById('pipelineStatusBadge').className = 'text-xs font-mono px-2.5 py-1 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800';
 
       updateStepUI(1, 'running', 'Inspecting photo with Multimodal Vision analysis...');
       updateStepUI(2, 'waiting', 'Pending Ward & Department resolution...');
@@ -476,7 +523,7 @@
 
         setTimeout(() => {
           updateStepUI(2, 'completed', 'Ward & Department mapped with Corporator & SLA.');
-          updateStepUI(3, 'running', 'Registering in AMC Grievance ledger & drafting Tweet...');
+          updateStepUI(3, 'running', 'Registering in AMC Central Grievance Ledger & drafting Tweet...');
         }, 1600);
 
         const response = await fetch('/api/agent/file-complaint', {
@@ -489,8 +536,8 @@
 
         setTimeout(() => {
           updateStepUI(3, 'completed', `Filed ticket ${data.ticket.ticketId}. Status: ${data.ticket.status}.`);
-          document.getElementById('pipelineStatusBadge').textContent = 'Agent Pipeline Completed';
-          document.getElementById('pipelineStatusBadge').className = 'text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full font-mono font-medium';
+          document.getElementById('pipelineStatusBadge').textContent = 'PIPELINE COMPLETE';
+          document.getElementById('pipelineStatusBadge').className = 'text-xs font-mono px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800';
 
           const ticketBox = document.getElementById('ticketResultBox');
           ticketBox.classList.remove('hidden');
@@ -503,12 +550,12 @@
 
           const sevBadge = document.getElementById('resSeverityBadge');
           sevBadge.textContent = data.ticket.severity;
-          sevBadge.className = data.ticket.severity === 'CRITICAL' ? 'text-[10px] px-2 py-0.5 rounded font-bold uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'text-[10px] px-2 py-0.5 rounded font-bold uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30';
+          sevBadge.className = data.ticket.severity === 'CRITICAL' ? 'text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30';
 
           document.getElementById('resSocialText').textContent = `"${data.ticket.socialPost.text}"`;
           document.getElementById('tweetNowBtn').href = data.ticket.socialPost.tweetUrl;
 
-          appendChatMessage('bot', `✅ **Ticket Registered**: Filed **${data.ticket.ticketId}** for *${data.ticket.issueTitle}* in **${data.ticket.location.wardName}**. Assigned to **${data.ticket.department.name}**.`);
+          appendChatMessage('bot', `✅ **Ticket Registered**: Filed **${data.ticket.ticketId}** for *${data.ticket.issueTitle}* in **${data.ticket.location.wardName}**. Routed to **${data.ticket.department.name}**.`);
           refreshTickets();
         }, 2200);
 
@@ -526,14 +573,14 @@
       text.textContent = detail;
 
       if (state === 'running') {
-        icon.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-amber-400" aria-hidden="true"></i>';
-        card.className = 'p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/40 flex items-start space-x-3 transition shadow-lg shadow-amber-500/5';
+        icon.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-cyan-400"></i>';
+        card.className = 'p-3.5 rounded-xl bg-slate-950 border border-cyan-500/50 flex items-start space-x-3 transition shadow-lg shadow-cyan-500/10';
       } else if (state === 'completed') {
-        icon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400" aria-hidden="true"></i>';
-        card.className = 'p-3.5 rounded-xl bg-slate-900/90 border border-emerald-500/30 flex items-start space-x-3 transition';
+        icon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
+        card.className = 'p-3.5 rounded-xl bg-slate-950 border border-emerald-500/40 flex items-start space-x-3 transition';
       } else {
-        icon.innerHTML = '<i class="fa-solid fa-clock text-slate-600" aria-hidden="true"></i>';
-        card.className = 'p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start space-x-3 transition';
+        icon.innerHTML = '<i class="fa-solid fa-clock text-slate-700"></i>';
+        card.className = 'p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-start space-x-3 transition';
       }
     }
 
@@ -560,7 +607,7 @@
 • **Status**: ${t.status}
 • **Ward**: ${t.location.wardName} (${t.location.zone})
 • **Department**: ${t.department.name}
-• **Estimated SLA**: ${t.slaHours} hrs`;
+• **Target SLA**: ${t.slaHours} hrs`;
           appendChatMessage('bot', reply);
         } else {
           appendChatMessage('bot', data.message || 'Could not find ticket details.');
@@ -583,13 +630,13 @@
       wrap.className = `flex items-start space-x-2 ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`;
 
       const avatar = document.createElement('div');
-      avatar.className = `w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] shrink-0 font-bold ${isUser ? 'bg-blue-600' : 'bg-indigo-600'}`;
+      avatar.className = `w-6 h-6 rounded-full flex items-center justify-center text-slate-950 text-[10px] shrink-0 font-bold ${isUser ? 'bg-cyan-400' : 'bg-emerald-400'}`;
       avatar.textContent = isUser ? 'ME' : 'AI';
 
       const bubble = document.createElement('div');
       bubble.className = isUser 
-        ? 'bg-blue-600 text-white p-2.5 rounded-xl rounded-tr-none text-xs leading-relaxed max-w-[85%]'
-        : 'bg-slate-800/90 border border-slate-700 p-2.5 rounded-xl rounded-tl-none text-slate-300 text-xs leading-relaxed max-w-[85%]';
+        ? 'bg-cyan-500/20 border border-cyan-500/30 text-white p-3 rounded-xl rounded-tr-none text-xs leading-relaxed max-w-[85%]'
+        : 'bg-slate-900 border border-slate-800 p-3 rounded-xl rounded-tl-none text-slate-300 text-xs leading-relaxed max-w-[85%]';
       
       const formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>').replace(/\n/g, '<br>');
       bubble.innerHTML = formatted;
@@ -608,32 +655,32 @@
         const tickets = data.tickets || [];
 
         if (tickets.length === 0) {
-          container.innerHTML = '<div class="text-center py-4 text-xs text-slate-500">No complaints registered yet.</div>';
+          container.innerHTML = '<div class="text-center py-4 text-xs font-mono text-slate-500">No complaints registered yet.</div>';
           return;
         }
 
         container.innerHTML = tickets.map(t => {
-          let badgeClass = 'badge-pothole';
-          if (t.category === 'garbage_dump') badgeClass = 'badge-garbage';
-          if (t.category === 'broken_streetlight') badgeClass = 'badge-light';
-          if (t.category === 'water_logging') badgeClass = 'badge-drainage';
+          let badgeColor = 'text-rose-400 border-rose-500/30 bg-rose-500/10';
+          if (t.category === 'garbage_dump') badgeColor = 'text-amber-400 border-amber-500/30 bg-amber-500/10';
+          if (t.category === 'broken_streetlight') badgeColor = 'text-purple-400 border-purple-500/30 bg-purple-500/10';
+          if (t.category === 'water_logging') badgeColor = 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10';
 
           return `
-            <div onclick="askQuickPrompt('Status of ${t.ticketId}')" role="button" tabindex="0" onkeypress="if(event.key === 'Enter') askQuickPrompt('Status of ${t.ticketId}')" class="p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 cursor-pointer transition">
+            <div onclick="askQuickPrompt('Status of ${t.ticketId}')" class="p-2.5 rounded-xl bg-slate-950 hover:bg-slate-900 border border-slate-800 cursor-pointer transition">
               <div class="flex items-center justify-between mb-1">
-                <span class="font-mono font-bold text-xs text-indigo-400">${t.ticketId}</span>
-                <span class="text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase ${badgeClass}">${t.category.replace('_', ' ')}</span>
+                <span class="font-mono font-bold text-xs text-cyan-400">${t.ticketId}</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md font-semibold uppercase border ${badgeColor}">${t.category.replace('_', ' ')}</span>
               </div>
               <p class="text-xs font-medium text-slate-200 truncate">${t.issueTitle}</p>
-              <div class="flex items-center justify-between mt-1.5 text-[10px] text-slate-400">
+              <div class="flex items-center justify-between mt-1.5 text-[10px] font-mono text-slate-400">
                 <span>📍 ${t.location.wardName}</span>
-                <span class="text-emerald-400 font-semibold">${t.status}</span>
+                <span class="text-emerald-400 font-bold">${t.status}</span>
               </div>
             </div>
           `;
         }).join('');
       } catch (e) {
-        container.innerHTML = '<div class="text-xs text-rose-400 text-center py-2">Error loading tickets</div>';
+        container.innerHTML = '<div class="text-xs text-rose-400 text-center py-2 font-mono">Error syncing tickets</div>';
       }
     }
 
