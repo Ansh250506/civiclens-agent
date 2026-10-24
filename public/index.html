@@ -3,167 +3,262 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CIVICLENS AI — AMC Smart Municipal Command & Grievance AI</title>
+  <title>CivicLens 2.0 — Spatial Glassmorphism AI Municipal Terminal</title>
   
-  <!-- Font & Frameworks -->
+  <!-- Modern Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
-      --bg-dark: #080b11;
-      --card-bg: rgba(13, 19, 33, 0.7);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --accent-cyan: #06b6d4;
-      --accent-emerald: #10b981;
-      --accent-rose: #f43f5e;
+      --bg-dark: #05070d;
+      --glass-surface: rgba(255, 255, 255, 0.035);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-border-highlight: rgba(255, 255, 255, 0.25);
+      --neon-cyan: #00f2fe;
+      --neon-purple: #9d4edd;
+      --neon-emerald: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Outfit', sans-serif;
       background-color: var(--bg-dark);
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.08) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.08) 0px, transparent 50%),
-        radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
-      color: #e2e8f0;
+      color: #f8fafc;
       min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
     }
 
     .font-mono {
       font-family: 'JetBrains Mono', monospace;
     }
 
-    .glass-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--card-border);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    /* Ambient Spatial Lighting Orbs */
+    .spatial-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.45;
+      animation: floatOrb 12s infinite ease-in-out alternate;
+    }
+    .orb-1 {
+      width: 500px;
+      height: 500px;
+      background: linear-gradient(135deg, #0284c7, #00f2fe);
+      top: -100px;
+      left: -100px;
+    }
+    .orb-2 {
+      width: 550px;
+      height: 550px;
+      background: linear-gradient(135deg, #7c3aed, #db2777);
+      bottom: -150px;
+      right: -100px;
+      animation-duration: 16s;
+    }
+    .orb-3 {
+      width: 350px;
+      height: 350px;
+      background: linear-gradient(135deg, #059669, #10b981);
+      top: 40%;
+      left: 35%;
+      opacity: 0.25;
+      animation-duration: 20s;
     }
 
-    .glass-card-hover:hover {
-      border-color: rgba(6, 182, 212, 0.4);
-      transform: translateY(-2px);
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(40px, 30px) scale(1.1); }
     }
 
-    /* Radar scan effect for agent */
-    @keyframes radarScan {
-      0% { transform: translateY(-100%); opacity: 0; }
-      50% { opacity: 0.8; }
-      100% { transform: translateY(100%); opacity: 0; }
+    /* Glassmorphism 2.0 Bento Cards */
+    .bento-glass {
+      background: var(--glass-surface);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      position: relative;
+      z-index: 10;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .scan-line {
+    .bento-glass:hover {
+      border-color: var(--glass-border-highlight);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    /* Floating Dock Navigation */
+    .floating-dock {
+      background: rgba(10, 14, 26, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 100px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* Interactive Hologram Scanner Line */
+    @keyframes scanVertical {
+      0% { top: 0%; opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    .scanner-beam {
       position: absolute;
-      top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, transparent, #06b6d4, #10b981, transparent);
-      animation: radarScan 2.5s infinite linear;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #00f2fe, #fff, #00f2fe, transparent);
+      box-shadow: 0 0 20px #00f2fe, 0 0 10px #00f2fe;
+      animation: scanVertical 2.2s infinite ease-in-out;
+      pointer-events: none;
     }
 
-    /* Glowing border gradient */
-    .glow-cyan {
-      box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.3);
+    /* Custom Glass Buttons */
+    .glass-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      transition: all 0.25s ease;
+    }
+    .glass-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    /* Glass Glow Button */
+    .glow-btn {
+      background: linear-gradient(135deg, rgba(0, 242, 254, 0.9), rgba(79, 70, 229, 0.9));
+      box-shadow: 0 10px 30px -5px rgba(0, 242, 254, 0.4);
+      transition: all 0.3s ease;
+    }
+    .glow-btn:hover {
+      box-shadow: 0 15px 40px -5px rgba(0, 242, 254, 0.7);
+      transform: translateY(-2px);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
     }
   </style>
 </head>
-<body class="flex flex-col selection:bg-cyan-500 selection:text-black">
+<body class="p-3 sm:p-6 lg:p-8">
 
-  <!-- COMMAND CENTER TOPBAR -->
-  <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+  <!-- Ambient Background Orbs -->
+  <div class="spatial-orb orb-1"></div>
+  <div class="spatial-orb orb-2"></div>
+  <div class="spatial-orb orb-3"></div>
+
+  <!-- FLOATING GLASS DOCK (NAVIGATION) -->
+  <header class="max-w-7xl mx-auto mb-6 sticky top-4 z-50">
+    <div class="floating-dock px-5 py-3 flex items-center justify-between">
       
-      <!-- Brand & Municipal Unit -->
+      <!-- Brand & Status -->
       <div class="flex items-center space-x-3.5">
-        <div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/25">
-          <i class="fa-solid fa-satellite-dish text-slate-950 text-lg font-bold"></i>
-          <span class="absolute -top-1 -right-1 flex h-3 w-3">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-          </span>
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-400 via-indigo-500 to-fuchsia-500 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+          <i class="fa-solid fa-cube text-slate-950 text-base"></i>
         </div>
         <div>
           <div class="flex items-center space-x-2">
-            <span class="text-lg font-bold tracking-tight text-white uppercase">CivicLens<span class="text-cyan-400">.ai</span></span>
-            <span class="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-800/60 font-semibold">AMC Command v2.4</span>
+            <span class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-cyan-300 bg-clip-text text-transparent">CivicLens 2.0</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold tracking-wide">SPATIAL GLASS</span>
           </div>
-          <p class="text-[11px] text-slate-400 font-normal">Autonomous Municipal Vision Agent • Ahmedabad Corporation</p>
+          <p class="text-[11px] text-slate-400 -mt-0.5 font-normal">Autonomous Vision & Ward Resolution • AMC Engine</p>
         </div>
       </div>
 
-      <!-- Quick Metrics Strip -->
-      <div class="hidden md:flex items-center space-x-6 text-xs font-mono">
-        <div class="flex items-center space-x-2 bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800">
-          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-          <span class="text-slate-400">Agent Status:</span>
-          <span class="text-emerald-400 font-bold">ACTIVE (ONLINE)</span>
+      <!-- Live Indicators -->
+      <div class="flex items-center space-x-3">
+        <div class="hidden sm:flex items-center space-x-2 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full text-xs font-mono">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-slate-300">Municipal Central Grid</span>
+          <span class="text-emerald-400 font-bold">ONLINE</span>
         </div>
-        <div class="flex items-center space-x-2 bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-800">
-          <span class="text-slate-400">AMC Wards Synced:</span>
-          <span class="text-cyan-400 font-bold">48 Units</span>
-        </div>
-        <button onclick="document.getElementById('apiKeyModal').classList.toggle('hidden')" class="px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 transition flex items-center space-x-1.5">
-          <i class="fa-solid fa-sliders"></i>
-          <span>Vision Config</span>
+
+        <button onclick="document.getElementById('apiKeyModal').classList.toggle('hidden')" class="glass-btn text-xs px-3.5 py-1.5 rounded-full flex items-center space-x-2 text-cyan-300">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span class="hidden sm:inline">Vision Engine</span>
         </button>
       </div>
 
     </div>
   </header>
 
-  <!-- DASHBOARD GRID -->
-  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+  <!-- MAIN BENTO GRID CONTAINER -->
+  <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
 
-    <!-- LEFT 7 COLUMNS: INTAKE & AUTONOMOUS AGENT ORCHESTRATION -->
+    <!-- LEFT 7 COLS: VISUAL INTAKE & AGENT PIPELINE -->
     <div class="lg:col-span-7 space-y-6">
 
-      <!-- Upload & Defect Input Console -->
-      <div class="glass-card rounded-2xl p-5 sm:p-6 relative overflow-hidden">
-        <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-5">
-          <div class="flex items-center space-x-2.5">
-            <span class="w-6 h-6 rounded-md bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-mono font-bold text-xs border border-cyan-500/40">01</span>
-            <h2 class="text-base font-bold text-white tracking-wide uppercase">Defect Visual Sensor Intake</h2>
+      <!-- Bento Tile 1: Photo Sensor Intake -->
+      <div class="bento-glass p-6 sm:p-7">
+        <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
+          <div class="flex items-center space-x-3">
+            <span class="w-7 h-7 rounded-lg bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 flex items-center justify-center font-mono font-bold text-xs">01</span>
+            <h2 class="text-base font-bold text-white tracking-wide">Multimodal Defect Visual Sensor</h2>
           </div>
-          <span class="text-xs font-mono text-cyan-400/80">STEP 1 OF 3</span>
+          <span class="text-xs font-mono text-cyan-400/80">Edge Detection Ready</span>
         </div>
 
-        <!-- Sample Issue Presets -->
+        <!-- Quick Dataset Presets -->
         <div class="mb-5">
-          <label class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block mb-2.5 flex items-center justify-between">
-            <span><span>⚡</span> Select Indian Civic Benchmark Photo (Mendeley / Roboflow)</span>
-            <span class="text-cyan-400 text-[10px]">Instant Demo</span>
-          </label>
+          <p class="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-2.5 flex items-center justify-between">
+            <span>⚡ Select Indian Street Dataset Sample (Mendeley / Roboflow)</span>
+            <span class="text-cyan-400 text-[10px]">Instant Benchmark</span>
+          </p>
+
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-            <button onclick="selectSample('pothole', 'Severe Bitumen Crater & Asphalt Fractures', 'Sindhu Bhavan Road, Bodakdev')" class="glass-card glass-card-hover p-3 rounded-xl text-left border border-slate-800/80 transition group">
-              <div class="flex items-center space-x-2 text-rose-400 text-xs font-semibold mb-1">
+            <button onclick="selectSample('pothole', 'Deep Bitumen Crater & Asphalt Fractures', 'Sindhu Bhavan Road, Bodakdev')" class="glass-btn p-3 rounded-2xl text-left transition group">
+              <div class="flex items-center space-x-2 text-rose-400 text-xs font-bold mb-1">
                 <i class="fa-solid fa-road-barrier"></i>
                 <span>Pothole</span>
               </div>
               <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate font-mono">Sindhu Bhavan</p>
             </button>
 
-            <button onclick="selectSample('garbage', 'Solid Municipal Waste Overflow & Bio Hazard', 'CG Road, Navrangpura')" class="glass-card glass-card-hover p-3 rounded-xl text-left border border-slate-800/80 transition group">
-              <div class="flex items-center space-x-2 text-amber-400 text-xs font-semibold mb-1">
+            <button onclick="selectSample('garbage', 'Solid Municipal Waste Overflow & Bio Hazard', 'CG Road, Navrangpura')" class="glass-btn p-3 rounded-2xl text-left transition group">
+              <div class="flex items-center space-x-2 text-amber-400 text-xs font-bold mb-1">
                 <i class="fa-solid fa-dumpster"></i>
                 <span>Garbage</span>
               </div>
               <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate font-mono">CG Road Market</p>
             </button>
 
-            <button onclick="selectSample('waterlogging', 'Stormwater Conduit Failure & Road Submergence', 'Maninagar, Kankaria Circle')" class="glass-card glass-card-hover p-3 rounded-xl text-left border border-slate-800/80 transition group">
-              <div class="flex items-center space-x-2 text-blue-400 text-xs font-semibold mb-1">
+            <button onclick="selectSample('waterlogging', 'Stormwater Conduit Failure & Inundation', 'Maninagar, Kankaria Circle')" class="glass-btn p-3 rounded-2xl text-left transition group">
+              <div class="flex items-center space-x-2 text-blue-400 text-xs font-bold mb-1">
                 <i class="fa-solid fa-water-ladder"></i>
                 <span>Water Log</span>
               </div>
               <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate font-mono">Maninagar Circle</p>
             </button>
 
-            <button onclick="selectSample('streetlight', 'High-Risk Electrical Wire & Luminaire Fall', 'Chandkheda, Near Visat Circle')" class="glass-card glass-card-hover p-3 rounded-xl text-left border border-slate-800/80 transition group">
-              <div class="flex items-center space-x-2 text-purple-400 text-xs font-semibold mb-1">
+            <button onclick="selectSample('streetlight', 'Exposed High-Voltage Cable & Damaged Pole', 'Chandkheda, Near Visat Circle')" class="glass-btn p-3 rounded-2xl text-left transition group">
+              <div class="flex items-center space-x-2 text-fuchsia-400 text-xs font-bold mb-1">
                 <i class="fa-solid fa-bolt-lightning"></i>
                 <span>Streetlight</span>
               </div>
@@ -172,145 +267,143 @@
           </div>
         </div>
 
-        <!-- Visual Sensor Upload Pad -->
-        <div id="dropzone" onclick="document.getElementById('fileInput').click()" class="border-2 border-dashed border-slate-700/80 hover:border-cyan-500 rounded-xl p-6 text-center cursor-pointer transition bg-slate-950/60 relative group overflow-hidden">
+        <!-- Glass Upload Pad with Scanning Effect -->
+        <div id="dropzone" onclick="document.getElementById('fileInput').click()" class="border border-dashed border-white/20 hover:border-cyan-400/80 rounded-2xl p-7 text-center cursor-pointer transition bg-white/[0.02] relative group overflow-hidden">
           <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileSelected(event)">
           
-          <div id="uploadPrompt" class="space-y-2 py-4">
-            <div class="w-12 h-12 mx-auto rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-cyan-400 text-xl group-hover:scale-110 group-hover:border-cyan-500 transition">
+          <div id="uploadPrompt" class="space-y-2 py-3">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-cyan-300 text-2xl group-hover:scale-110 group-hover:border-cyan-400 transition shadow-inner">
               <i class="fa-solid fa-cloud-arrow-up"></i>
             </div>
-            <p class="text-sm font-medium text-slate-200">Drop inspection imagery here or browse</p>
-            <p class="text-xs text-slate-500 font-mono">JPEG • PNG • WEBP up to 10MB</p>
+            <p class="text-sm font-semibold text-slate-200">Drag & drop inspection image or browse</p>
+            <p class="text-xs text-slate-400 font-mono">JPG, PNG, WEBP • Max 10MB</p>
           </div>
 
           <div id="imagePreviewContainer" class="hidden relative">
-            <div class="scan-line"></div>
-            <img id="previewImg" alt="Defect preview" class="max-h-60 mx-auto rounded-lg shadow-2xl object-cover border border-slate-700">
-            <div class="mt-2.5 flex items-center justify-center space-x-2">
-              <span class="inline-block w-2 h-2 rounded-full bg-cyan-400"></span>
+            <div class="scanner-beam"></div>
+            <img id="previewImg" alt="Defect" class="max-h-64 mx-auto rounded-xl shadow-2xl object-cover border border-white/20">
+            <div class="mt-3 flex items-center justify-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
               <p id="fileNameDisplay" class="text-xs text-cyan-300 font-mono font-medium"></p>
             </div>
           </div>
         </div>
 
-        <!-- Geolocation & Meta Fields -->
-        <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        <!-- Inputs: Location & Override -->
+        <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block mb-1.5">Area / Landmark</label>
             <div class="relative">
-              <input type="text" id="areaInput" placeholder="e.g. Sindhu Bhavan Road, Bodakdev" class="w-full bg-slate-950 border border-slate-700/90 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500 transition font-mono">
-              <button type="button" onclick="detectGPSLocation()" class="absolute right-2 top-2 bg-slate-800 hover:bg-slate-700 text-cyan-400 text-[10px] font-mono px-2 py-1 rounded transition flex items-center space-x-1">
-                <i class="fa-solid fa-crosshairs"></i>
+              <input type="text" id="areaInput" placeholder="e.g. Sindhu Bhavan Road, Bodakdev" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-cyan-400 transition font-mono">
+              <button type="button" onclick="detectGPSLocation()" class="absolute right-2.5 top-2.5 bg-white/10 hover:bg-white/20 text-cyan-300 text-[10px] font-mono px-2.5 py-1 rounded-lg transition flex items-center space-x-1">
+                <i class="fa-solid fa-location-crosshairs"></i>
                 <span>GPS</span>
               </button>
             </div>
           </div>
 
           <div>
-            <label class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block mb-1.5">Title Override (Optional)</label>
-            <input type="text" id="customTitleInput" placeholder="Autonomous Agent infers from image" class="w-full bg-slate-950 border border-slate-700/90 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500 transition font-mono">
+            <label class="text-[11px] font-mono uppercase tracking-wider text-slate-400 block mb-1.5">Custom Title (Optional)</label>
+            <input type="text" id="customTitleInput" placeholder="AI Agent infers from photo" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-cyan-400 transition font-mono">
           </div>
         </div>
 
-        <!-- Launch Button -->
-        <button id="agentRunBtn" onclick="runAutonomousAgent()" class="w-full mt-5 bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500 hover:opacity-95 text-slate-950 font-bold py-3.5 px-6 rounded-xl transition shadow-lg shadow-cyan-500/20 flex items-center justify-center space-x-2 text-sm tracking-wide uppercase glow-cyan">
-          <i class="fa-solid fa-microchip"></i>
-          <span>Trigger Autonomous Resolution Agent</span>
+        <!-- Glow Action Button -->
+        <button id="agentRunBtn" onclick="runAutonomousAgent()" class="glow-btn w-full mt-6 text-slate-950 font-extrabold py-4 px-6 rounded-2xl flex items-center justify-center space-x-2.5 text-sm tracking-wider uppercase cursor-pointer">
+          <i class="fa-solid fa-atom text-base"></i>
+          <span>Execute Autonomous Multi-Tool Agent</span>
         </button>
       </div>
 
-      <!-- Agent Pipeline Real-Time Telemetry -->
-      <div id="pipelineDisplay" class="glass-card rounded-2xl p-5 sm:p-6 hidden">
-        <div class="flex items-center justify-between pb-3.5 border-b border-slate-800 mb-4">
-          <div class="flex items-center space-x-2">
-            <span class="w-6 h-6 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono font-bold text-xs border border-emerald-500/40">02</span>
-            <h3 class="text-sm font-bold text-white tracking-wide uppercase">Agent Multi-Tool Execution Chain</h3>
+      <!-- Bento Tile 2: Live Agent Multi-Tool Pipeline -->
+      <div id="pipelineDisplay" class="bento-glass p-6 sm:p-7 hidden">
+        <div class="flex items-center justify-between pb-3.5 border-b border-white/10 mb-4">
+          <div class="flex items-center space-x-3">
+            <span class="w-7 h-7 rounded-lg bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 flex items-center justify-center font-mono font-bold text-xs">02</span>
+            <h3 class="text-sm font-bold text-white tracking-wide uppercase">Multi-Tool Agent Resolution Chain</h3>
           </div>
-          <span id="pipelineStatusBadge" class="text-xs font-mono px-2.5 py-1 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800">Processing...</span>
+          <span id="pipelineStatusBadge" class="text-xs font-mono px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 font-semibold">EXECUTING TOOLS...</span>
         </div>
 
+        <!-- 3-Tool Execution Cards -->
         <div class="space-y-3 font-mono text-xs">
-          <!-- Tool 1 -->
-          <div id="stepCard1" class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-start space-x-3 transition">
-            <div id="stepIcon1" class="mt-0.5 text-cyan-400 text-sm">
+          <div id="stepCard1" class="p-4 rounded-xl bg-white/[0.03] border border-white/10 flex items-start space-x-3 transition">
+            <div id="stepIcon1" class="mt-0.5 text-cyan-300 text-sm">
               <i class="fa-solid fa-circle-notch fa-spin"></i>
             </div>
             <div class="flex-1">
               <div class="flex justify-between items-center mb-1">
                 <span class="font-bold text-slate-200">TOOL 1: Multimodal Vision Inspection</span>
-                <span class="text-[10px] text-cyan-400">analyzeCivicImage()</span>
+                <span class="text-[10px] text-cyan-300 font-semibold">analyzeCivicImage()</span>
               </div>
               <p id="stepDetail1" class="text-slate-400 text-[11px]">Extracting civic defect features, hazard classification & severity level...</p>
             </div>
           </div>
 
-          <!-- Tool 2 -->
-          <div id="stepCard2" class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-start space-x-3 transition">
+          <div id="stepCard2" class="p-4 rounded-xl bg-white/[0.03] border border-white/10 flex items-start space-x-3 transition">
             <div id="stepIcon2" class="mt-0.5 text-slate-600 text-sm">
               <i class="fa-solid fa-clock"></i>
             </div>
             <div class="flex-1">
               <div class="flex justify-between items-center mb-1">
-                <span class="font-bold text-slate-200">TOOL 2: Ward & Department Resolver</span>
-                <span class="text-[10px] text-cyan-400">lookupWardAndDepartment()</span>
+                <span class="font-bold text-slate-200">TOOL 2: Spatial Ward & Dept Resolver</span>
+                <span class="text-[10px] text-cyan-300 font-semibold">lookupWardAndDepartment()</span>
               </div>
               <p id="stepDetail2" class="text-slate-400 text-[11px]">Mapping geo location to AMC Ward, Corporator and accountable AMC department...</p>
             </div>
           </div>
 
-          <!-- Tool 3 -->
-          <div id="stepCard3" class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-start space-x-3 transition">
+          <div id="stepCard3" class="p-4 rounded-xl bg-white/[0.03] border border-white/10 flex items-start space-x-3 transition">
             <div id="stepIcon3" class="mt-0.5 text-slate-600 text-sm">
               <i class="fa-solid fa-clock"></i>
             </div>
             <div class="flex-1">
               <div class="flex justify-between items-center mb-1">
                 <span class="font-bold text-slate-200">TOOL 3: Database Ticket Creation & Social Draft</span>
-                <span class="text-[10px] text-cyan-400">createComplaintTicket()</span>
+                <span class="text-[10px] text-cyan-300 font-semibold">createComplaintTicket()</span>
               </div>
               <p id="stepDetail3" class="text-slate-400 text-[11px]">Writing grievance record to AMC Central DB and generating social accountability draft...</p>
             </div>
           </div>
         </div>
 
-        <!-- Result Ticket Box -->
-        <div id="ticketResultBox" class="mt-5 p-4 rounded-xl bg-slate-950 border border-cyan-500/40 hidden">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+        <!-- Generated Municipal Ticket Capsule -->
+        <div id="ticketResultBox" class="mt-5 p-5 rounded-2xl bg-white/[0.04] border border-cyan-400/30 hidden shadow-xl">
+          <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-3.5">
             <div class="flex items-center space-x-2">
-              <span class="text-[11px] font-mono text-slate-400 uppercase">Tracking ID:</span>
-              <span id="resTicketId" class="text-sm font-extrabold text-cyan-400 font-mono tracking-wider">AMC-2026-XXXX</span>
+              <span class="text-[11px] font-mono text-slate-400 uppercase">Grievance Tracking ID:</span>
+              <span id="resTicketId" class="text-base font-extrabold text-cyan-300 font-mono tracking-wider">AMC-2026-XXXX</span>
             </div>
-            <span id="resSeverityBadge" class="text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase">CRITICAL</span>
+            <span id="resSeverityBadge" class="text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold uppercase">CRITICAL</span>
           </div>
 
-          <div class="grid grid-cols-2 gap-3 text-xs mb-3 font-mono">
+          <div class="grid grid-cols-2 gap-3 text-xs mb-3.5 font-mono">
             <div>
-              <span class="text-slate-500 text-[10px]">Assigned Ward:</span>
+              <span class="text-slate-400 text-[10px]">Administrative Ward:</span>
               <p id="resWardName" class="font-bold text-slate-200 truncate">-</p>
             </div>
             <div>
-              <span class="text-slate-500 text-[10px]">AMC Department:</span>
+              <span class="text-slate-400 text-[10px]">AMC Department:</span>
               <p id="resDeptName" class="font-bold text-slate-200 truncate">-</p>
             </div>
             <div>
-              <span class="text-slate-500 text-[10px]">Service Level (SLA):</span>
+              <span class="text-slate-400 text-[10px]">Service SLA ETA:</span>
               <p id="resSla" class="font-bold text-emerald-400">-</p>
             </div>
             <div>
-              <span class="text-slate-500 text-[10px]">Accountable Officer:</span>
+              <span class="text-slate-400 text-[10px]">Responsible Officer:</span>
               <p id="resOfficer" class="font-bold text-slate-200 truncate">-</p>
             </div>
           </div>
 
-          <!-- Social Post Escalation -->
-          <div class="mt-3 p-3 bg-slate-900 rounded-lg border border-slate-800">
-            <div class="flex items-center justify-between mb-1.5">
-              <span class="text-[11px] font-bold text-cyan-300 font-mono flex items-center space-x-1.5">
-                <i class="fa-brands fa-x-twitter"></i>
-                <span>Automated Social Media Post Draft</span>
+          <!-- Social Escalation Tweet Box -->
+          <div class="mt-3 p-3.5 bg-white/[0.03] rounded-xl border border-white/10">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[11px] font-bold text-sky-400 font-mono flex items-center space-x-1.5">
+                <i class="fa-brands fa-x-twitter text-sm"></i>
+                <span>Auto-Drafted Social Escalation Post</span>
               </span>
-              <a id="tweetNowBtn" href="#" target="_blank" rel="noopener noreferrer" class="text-[11px] bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-2.5 py-1 rounded transition flex items-center space-x-1">
+              <a id="tweetNowBtn" href="#" target="_blank" rel="noopener noreferrer" class="text-[11px] bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-3 py-1 rounded-full transition flex items-center space-x-1 shadow-md shadow-sky-500/20">
                 <i class="fa-brands fa-x-twitter"></i>
                 <span>Post on X</span>
               </a>
@@ -323,33 +416,33 @@
 
     </div>
 
-    <!-- RIGHT 5 COLUMNS: CONVERSATIONAL STATUS AGENT & LIVE DATABASE MONITOR -->
+    <!-- RIGHT 5 COLS: STATUS CHAT & LIVE MUNICIPAL LEDGER -->
     <div class="lg:col-span-5 space-y-6">
 
-      <!-- Chat Agent Card -->
-      <div class="glass-card rounded-2xl p-5 sm:p-6 flex flex-col h-[440px]">
-        <div class="flex items-center justify-between pb-3.5 border-b border-slate-800 mb-3">
+      <!-- Bento Tile 3: Conversational Status Agent -->
+      <div class="bento-glass p-6 flex flex-col h-[460px]">
+        <div class="flex items-center justify-between pb-3.5 border-b border-white/10 mb-3">
           <div class="flex items-center space-x-2.5">
-            <div class="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs font-mono font-bold border border-cyan-500/30">
+            <div class="w-8 h-8 rounded-xl bg-cyan-400/20 text-cyan-300 flex items-center justify-center text-sm border border-cyan-400/30">
               <i class="fa-solid fa-headset"></i>
             </div>
             <div>
-              <h3 class="text-sm font-bold text-white uppercase tracking-wide">Status Intelligence Agent</h3>
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider">Status AI Agent</h3>
               <p class="text-[10px] text-slate-400 font-mono">Ask: "What's the status?", "Track AMC-2026-8941"</p>
             </div>
           </div>
-          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">LIVE</span>
+          <span class="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">READY</span>
         </div>
 
-        <!-- Chat message thread -->
+        <!-- Chat messages container -->
         <div id="chatMessages" class="flex-1 overflow-y-auto space-y-3 pr-1 text-xs font-mono">
-          <div class="flex items-start space-x-2">
-            <div class="w-6 h-6 rounded-full bg-cyan-600 text-slate-950 flex items-center justify-center text-[10px] shrink-0 font-bold">
+          <div class="flex items-start space-x-2.5">
+            <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-400 to-indigo-500 text-slate-950 flex items-center justify-center text-[10px] shrink-0 font-extrabold shadow-md">
               AI
             </div>
-            <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl rounded-tl-none text-slate-300 leading-relaxed">
-              Namaste! I am the AMC CivicLens status agent. You can ask me:
-              <ul class="list-disc pl-4 mt-2 space-y-1 text-[11px] text-cyan-400">
+            <div class="bg-white/[0.04] border border-white/10 p-3.5 rounded-2xl rounded-tl-none text-slate-300 leading-relaxed">
+              Namaste! I am the AMC CivicLens status agent. Ask me anything:
+              <ul class="list-disc pl-4 mt-2 space-y-1.5 text-[11px] text-cyan-300">
                 <li><button type="button" class="hover:underline text-left" onclick="askQuickPrompt('What is the status of my recent ticket?')">"What is the status of my recent ticket?"</button></li>
                 <li><button type="button" class="hover:underline text-left" onclick="askQuickPrompt('Status of AMC-2026-8941')">"Status of AMC-2026-8941"</button></li>
                 <li><button type="button" class="hover:underline text-left" onclick="askQuickPrompt('Check potholes in Bodakdev')">"Check potholes in Bodakdev"</button></li>
@@ -358,29 +451,29 @@
           </div>
         </div>
 
-        <!-- Prompt input -->
-        <form onsubmit="handleChatSubmit(event)" class="mt-3 flex items-center space-x-2 pt-2 border-t border-slate-800">
-          <input type="text" id="chatInput" placeholder="Type: 'What's the status?'" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500 font-mono">
-          <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-xl px-4 py-2.5 text-xs font-bold transition">
+        <!-- Chat form input -->
+        <form onsubmit="handleChatSubmit(event)" class="mt-3 flex items-center space-x-2 pt-3 border-t border-white/10">
+          <input type="text" id="chatInput" placeholder="Ask: 'What's the status?'" class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400 font-mono">
+          <button type="submit" class="glow-btn text-slate-950 rounded-xl px-4 py-2.5 text-xs font-bold transition">
             <i class="fa-solid fa-paper-plane"></i>
           </button>
         </form>
       </div>
 
-      <!-- Live Mock Database Ledger -->
-      <div class="glass-card rounded-2xl p-5 sm:p-6">
-        <div class="flex items-center justify-between pb-3.5 border-b border-slate-800 mb-3">
+      <!-- Bento Tile 4: Mock AMC Municipal Ledger -->
+      <div class="bento-glass p-6">
+        <div class="flex items-center justify-between pb-3.5 border-b border-white/10 mb-3.5">
           <div class="flex items-center space-x-2">
-            <i class="fa-solid fa-server text-cyan-400 text-xs"></i>
-            <h3 class="text-sm font-bold text-white uppercase tracking-wide">AMC Central Grievance Ledger</h3>
+            <i class="fa-solid fa-database text-cyan-300 text-xs"></i>
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">AMC Municipal Database Ledger</h3>
           </div>
-          <button onclick="refreshTickets()" class="text-cyan-400 hover:text-cyan-300 text-xs font-mono flex items-center space-x-1">
+          <button onclick="refreshTickets()" class="text-cyan-300 hover:text-white text-xs font-mono flex items-center space-x-1 glass-btn px-2.5 py-1 rounded-lg">
             <i class="fa-solid fa-arrows-rotate"></i>
             <span>SYNC</span>
           </button>
         </div>
 
-        <div id="ticketsList" class="space-y-2.5 max-h-[290px] overflow-y-auto pr-1">
+        <div id="ticketsList" class="space-y-2.5 max-h-[280px] overflow-y-auto pr-1">
           <div class="text-center py-6 text-slate-500 text-xs font-mono">Loading AMC Municipal Tickets...</div>
         </div>
       </div>
@@ -389,12 +482,12 @@
 
   </main>
 
-  <!-- Vision API Config Modal -->
+  <!-- Vision API Modal -->
   <div id="apiKeyModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="glass-card bg-slate-950 border border-slate-800 max-w-md w-full rounded-2xl p-6 shadow-2xl">
+    <div class="bento-glass bg-slate-950/90 border border-white/20 max-w-md w-full p-6 shadow-2xl">
       <div class="flex justify-between items-center mb-3">
         <h3 class="text-sm font-bold text-white flex items-center space-x-2 uppercase font-mono">
-          <i class="fa-solid fa-key text-cyan-400"></i>
+          <i class="fa-solid fa-key text-cyan-300"></i>
           <span>Gemini Vision API Key (Optional)</span>
         </h3>
         <button onclick="document.getElementById('apiKeyModal').classList.add('hidden')" class="text-slate-400 hover:text-white">
@@ -402,11 +495,11 @@
         </button>
       </div>
       <p class="text-xs text-slate-400 mb-4 leading-relaxed font-sans">
-        If you have a Gemini API Key, paste it here for real-time multimodal vision calls. Otherwise, CivicLens runs on its built-in <strong class="text-cyan-400">Edge Computer Vision Heuristics Engine</strong>.
+        If you have a Gemini API Key, paste it here for real-time multimodal vision calls. Otherwise, CivicLens runs on its built-in <strong class="text-cyan-300">Edge Computer Vision Heuristics Engine</strong>.
       </p>
-      <input type="password" id="userKeyInput" placeholder="AIzaSy..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400 mb-4 font-mono">
+      <input type="password" id="userKeyInput" placeholder="AIzaSy..." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-cyan-400 mb-4 font-mono">
       <div class="flex justify-end space-x-2 font-mono">
-        <button onclick="saveApiKey()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold px-4 py-2 rounded-xl transition">
+        <button onclick="saveApiKey()" class="glow-btn text-slate-950 text-xs font-bold px-4 py-2 rounded-xl transition">
           Save Configuration
         </button>
       </div>
@@ -452,7 +545,7 @@
       };
 
       previewImg.src = sampleGraphics[type] || sampleGraphics.pothole;
-      fileNameDisplay.textContent = `[DATASET: ${type.toUpperCase()}_ISSUE_SAMPLE]`;
+      fileNameDisplay.textContent = `[BENCHMARK DATASET: ${type.toUpperCase()}]`;
     }
 
     function handleFileSelected(event) {
@@ -491,7 +584,7 @@
 
     async function runAutonomousAgent() {
       if (!selectedFile && !selectedSampleType) {
-        alert('Please choose one of the sample benchmark issues or upload an inspection photo.');
+        alert('Please select one of the sample benchmark issues or upload an inspection photo.');
         return;
       }
 
@@ -501,8 +594,8 @@
       const pipelineBox = document.getElementById('pipelineDisplay');
       pipelineBox.classList.remove('hidden');
       document.getElementById('ticketResultBox').classList.add('hidden');
-      document.getElementById('pipelineStatusBadge').textContent = 'AGENT RUNNING...';
-      document.getElementById('pipelineStatusBadge').className = 'text-xs font-mono px-2.5 py-1 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800';
+      document.getElementById('pipelineStatusBadge').textContent = 'PIPELINE ACTIVE...';
+      document.getElementById('pipelineStatusBadge').className = 'text-xs font-mono px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 font-bold';
 
       updateStepUI(1, 'running', 'Inspecting photo with Multimodal Vision analysis...');
       updateStepUI(2, 'waiting', 'Pending Ward & Department resolution...');
@@ -523,7 +616,7 @@
 
         setTimeout(() => {
           updateStepUI(2, 'completed', 'Ward & Department mapped with Corporator & SLA.');
-          updateStepUI(3, 'running', 'Registering in AMC Central Grievance Ledger & drafting Tweet...');
+          updateStepUI(3, 'running', 'Registering in AMC Grievance Ledger & drafting Tweet...');
         }, 1600);
 
         const response = await fetch('/api/agent/file-complaint', {
@@ -536,8 +629,8 @@
 
         setTimeout(() => {
           updateStepUI(3, 'completed', `Filed ticket ${data.ticket.ticketId}. Status: ${data.ticket.status}.`);
-          document.getElementById('pipelineStatusBadge').textContent = 'PIPELINE COMPLETE';
-          document.getElementById('pipelineStatusBadge').className = 'text-xs font-mono px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800';
+          document.getElementById('pipelineStatusBadge').textContent = 'RESOLVED & FILED';
+          document.getElementById('pipelineStatusBadge').className = 'text-xs font-mono px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 font-bold';
 
           const ticketBox = document.getElementById('ticketResultBox');
           ticketBox.classList.remove('hidden');
@@ -550,7 +643,7 @@
 
           const sevBadge = document.getElementById('resSeverityBadge');
           sevBadge.textContent = data.ticket.severity;
-          sevBadge.className = data.ticket.severity === 'CRITICAL' ? 'text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30';
+          sevBadge.className = data.ticket.severity === 'CRITICAL' ? 'text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold uppercase bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/40';
 
           document.getElementById('resSocialText').textContent = `"${data.ticket.socialPost.text}"`;
           document.getElementById('tweetNowBtn').href = data.ticket.socialPost.tweetUrl;
@@ -573,14 +666,14 @@
       text.textContent = detail;
 
       if (state === 'running') {
-        icon.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-cyan-400"></i>';
-        card.className = 'p-3.5 rounded-xl bg-slate-950 border border-cyan-500/50 flex items-start space-x-3 transition shadow-lg shadow-cyan-500/10';
+        icon.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-cyan-300"></i>';
+        card.className = 'p-4 rounded-xl bg-cyan-500/10 border border-cyan-400/40 flex items-start space-x-3 transition shadow-lg shadow-cyan-500/10';
       } else if (state === 'completed') {
         icon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
-        card.className = 'p-3.5 rounded-xl bg-slate-950 border border-emerald-500/40 flex items-start space-x-3 transition';
+        card.className = 'p-4 rounded-xl bg-emerald-500/10 border border-emerald-400/30 flex items-start space-x-3 transition';
       } else {
-        icon.innerHTML = '<i class="fa-solid fa-clock text-slate-700"></i>';
-        card.className = 'p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-start space-x-3 transition';
+        icon.innerHTML = '<i class="fa-solid fa-clock text-slate-600"></i>';
+        card.className = 'p-4 rounded-xl bg-white/[0.03] border border-white/10 flex items-start space-x-3 transition';
       }
     }
 
@@ -627,16 +720,16 @@
       const isUser = sender === 'user';
 
       const wrap = document.createElement('div');
-      wrap.className = `flex items-start space-x-2 ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`;
+      wrap.className = `flex items-start space-x-2.5 ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`;
 
       const avatar = document.createElement('div');
-      avatar.className = `w-6 h-6 rounded-full flex items-center justify-center text-slate-950 text-[10px] shrink-0 font-bold ${isUser ? 'bg-cyan-400' : 'bg-emerald-400'}`;
+      avatar.className = `w-7 h-7 rounded-full flex items-center justify-center text-slate-950 text-[10px] shrink-0 font-extrabold shadow-md ${isUser ? 'bg-cyan-300' : 'bg-gradient-to-tr from-cyan-400 to-indigo-500'}`;
       avatar.textContent = isUser ? 'ME' : 'AI';
 
       const bubble = document.createElement('div');
       bubble.className = isUser 
-        ? 'bg-cyan-500/20 border border-cyan-500/30 text-white p-3 rounded-xl rounded-tr-none text-xs leading-relaxed max-w-[85%]'
-        : 'bg-slate-900 border border-slate-800 p-3 rounded-xl rounded-tl-none text-slate-300 text-xs leading-relaxed max-w-[85%]';
+        ? 'bg-cyan-500/20 border border-cyan-400/40 text-white p-3.5 rounded-2xl rounded-tr-none text-xs leading-relaxed max-w-[85%]'
+        : 'bg-white/[0.04] border border-white/10 p-3.5 rounded-2xl rounded-tl-none text-slate-300 text-xs leading-relaxed max-w-[85%]';
       
       const formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>').replace(/\n/g, '<br>');
       bubble.innerHTML = formatted;
@@ -660,19 +753,19 @@
         }
 
         container.innerHTML = tickets.map(t => {
-          let badgeColor = 'text-rose-400 border-rose-500/30 bg-rose-500/10';
-          if (t.category === 'garbage_dump') badgeColor = 'text-amber-400 border-amber-500/30 bg-amber-500/10';
-          if (t.category === 'broken_streetlight') badgeColor = 'text-purple-400 border-purple-500/30 bg-purple-500/10';
-          if (t.category === 'water_logging') badgeColor = 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10';
+          let badgeColor = 'text-rose-300 border-rose-500/40 bg-rose-500/20';
+          if (t.category === 'garbage_dump') badgeColor = 'text-amber-300 border-amber-500/40 bg-amber-500/20';
+          if (t.category === 'broken_streetlight') badgeColor = 'text-fuchsia-300 border-fuchsia-500/40 bg-fuchsia-500/20';
+          if (t.category === 'water_logging') badgeColor = 'text-cyan-300 border-cyan-500/40 bg-cyan-500/20';
 
           return `
-            <div onclick="askQuickPrompt('Status of ${t.ticketId}')" class="p-2.5 rounded-xl bg-slate-950 hover:bg-slate-900 border border-slate-800 cursor-pointer transition">
-              <div class="flex items-center justify-between mb-1">
-                <span class="font-mono font-bold text-xs text-cyan-400">${t.ticketId}</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md font-semibold uppercase border ${badgeColor}">${t.category.replace('_', ' ')}</span>
+            <div onclick="askQuickPrompt('Status of ${t.ticketId}')" class="p-3 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 cursor-pointer transition">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="font-mono font-bold text-xs text-cyan-300">${t.ticketId}</span>
+                <span class="text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold uppercase border ${badgeColor}">${t.category.replace('_', ' ')}</span>
               </div>
               <p class="text-xs font-medium text-slate-200 truncate">${t.issueTitle}</p>
-              <div class="flex items-center justify-between mt-1.5 text-[10px] font-mono text-slate-400">
+              <div class="flex items-center justify-between mt-2 text-[10px] font-mono text-slate-400">
                 <span>📍 ${t.location.wardName}</span>
                 <span class="text-emerald-400 font-bold">${t.status}</span>
               </div>
