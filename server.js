@@ -4,9 +4,15 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
-import fs from 'fs';
 import { fileURLToPath } from 'url';
-import { analyzeCivicImage, lookupWardAndDepartment, createComplaintTicket, getTicketStatus, sanitizeInput } from './agent.js';
+import { 
+  analyzeCivicImage, 
+  lookupWardAndDepartment, 
+  createComplaintTicket, 
+  getTicketStatus, 
+  loadMockAMC,
+  sanitizeInput 
+} from './agent.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,36 +20,25 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Security Middleware (Scores high on Security & Accessibility audit)
-app.use(helmet({
-  contentSecurityPolicy: false, // Allows CDN icons & tailwind in browser
-  crossOriginEmbedderPolicy: false
-}));
+app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
 app.use(cors());
 app.use(express.json({ limit: '5mb' }));
 
-// Rate limiter to prevent DDoS / brute-force abuse
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 300,
-  standardHeaders: true,
-  legacyHeaders: false,
   message: { error: 'Too many requests, please try again later.' }
 });
 app.use('/api/', apiLimiter);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Multer storage with file type filtering & size limit (Prevents malicious file uploads)
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only valid image files are allowed.'));
-    }
+    if (file.mimetype.startsWith('image/')) cb(null, true);
+    else cb(new Error('Only image files are permitted.'));
   }
 });
 
@@ -68,20 +63,18 @@ app.post('/api/agent/file-complaint', upload.single('photo'), async (req, res) =
       return res.status(400).json({ error: 'Please upload an inspection photo or select a sample issue.' });
     }
 
-    // Step 1: Multimodal Vision Tool
+    // Step 1: Tool 1 - Multimodal Vision Analysis
     const visionAnalysis = await analyzeCivicImage(fileBuffer, filename, mimeType, userApiKey);
 
-    // Step 2: Ward & Department Resolver Tool
+    // Step 2: Tool 2 - Ward & Department Lookup
     const routing = lookupWardAndDepartment(area, visionAnalysis.category);
 
-    // Step 3: AMC Municipal Ticketing Tool
+    // Step 3: Tool 3 - Ticket Creation in Mock AMC System
     const createdTicket = createComplaintTicket({
       category: visionAnalysis.category,
       issueTitle: customTitle || visionAnalysis.issueTitle,
       description: visionAnalysis.description,
       severity: visionAnalysis.severity,
-      hazardFactor: visionAnalysis.hazardFactor,
-      detectedObjects: visionAnalysis.detectedObjects,
       areaInput: area,
       ward: routing.ward,
       department: routing.department
@@ -89,13 +82,26 @@ app.post('/api/agent/file-complaint', upload.single('photo'), async (req, res) =
 
     return res.json({
       success: true,
-      message: `Grievance ticket ${createdTicket.ticketId} successfully registered.`,
+      message: `Complaint ticket ${createdTicket.trackingId} successfully registered in AMC database.`,
       pipelineSteps: [
         { step: 1, name: "Multimodal Vision Analysis", tool: "analyzeCivicImage()", result: visionAnalysis },
         { step: 2, name: "Ward & Department Resolver", tool: "lookupWardAndDepartment()", result: routing },
-        { step: 3, name: "AMC DB Registration & Social Draft", tool: "createComplaintTicket()", result: { ticketId: createdTicket.ticketId, status: createdTicket.status } }
+        { step: 3, name: "AMC DB Complaint Creation", tool: "createComplaintTicket()", result: { trackingId: createdTicket.trackingId, status: createdTicket.status } }
       ],
-      ticket: createdTicket
+      ticket: {
+        ticketId: createdTicket.trackingId,
+        trackingId: createdTicket.trackingId,
+        issue: createdTicket.issue,
+        status: createdTicket.status,
+        ward: createdTicket.ward,
+        wardName: createdTicket.wardName,
+        zone: createdTicket.zone,
+        department: createdTicket.department,
+        issueTitle: createdTicket.issueTitle,
+        description: createdTicket.description,
+        severity: createdTicket.severity,
+        socialPost: createdTicket.socialPost
+      }
     });
   } catch (error) {
     return res.status(500).json({ error: error.message || 'Internal Server Error' });
@@ -116,31 +122,39 @@ app.post('/api/agent/chat', (req, res) => {
   }
 });
 
-// Query All Tickets
+// Query Mock AMC Complaints
 app.get('/api/tickets', (req, res) => {
   try {
-    const p = path.join(__dirname, 'data', 'tickets.json');
-    const tickets = JSON.parse(fs.readFileSync(p, 'utf-8'));
-    res.json({ tickets });
+    const db = loadMockAMC();
+    const formatted = db.complaints.map(c => ({
+      ticketId: c.trackingId,
+      trackingId: c.trackingId,
+      category: c.issue,
+      issue: c.issue,
+      issueTitle: c.issueTitle || `${c.issue.toUpperCase()} at ${c.area || c.ward}`,
+      location: {
+        wardName: c.wardName || c.ward,
+        area: c.area || c.ward
+      },
+      ward: c.ward,
+      department: c.department || 'Roads & Buildings',
+      status: c.status,
+      filedAt: c.filedAt
+    }));
+    res.json({ tickets: formatted, rawDB: db });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 
-// Health Check Endpoint (Essential for Evaluation & CI/CD)
 app.get('/health', (req, res) => {
-  res.json({
-    status: 'healthy',
-    uptime: process.uptime(),
-    timestamp: new Date().toISOString(),
-    service: 'CivicLens Autonomous Municipal Agent'
-  });
+  res.json({ status: 'healthy', service: 'AMC Civic Agent Enterprise API' });
 });
 
 export default app;
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {
-    console.log(`CivicLens Agent Enterprise Server listening on port ${PORT}`);
+    console.log(`CivicLens AMC Agent Server running on port ${PORT}`);
   });
 }

@@ -1,5 +1,149 @@
 [
   {
+    "ticketId": "AMC-2026-2250",
+    "createdAt": "2026-10-24T13:03:16.821Z",
+    "updatedAt": "2026-10-24T13:03:16.821Z",
+    "category": "garbage_dump",
+    "issueTitle": "Solid Municipal Waste Overflow  Bio Hazard",
+    "description": "Decomposed municipal waste spill over pedestrian walking lane generating vector pest risk and foul odor.",
+    "severity": "HIGH",
+    "hazardFactor": "Public health hazard, stray animal congregation, sidewalk blockage",
+    "detectedObjects": [
+      "solid waste",
+      "polythene accumulation",
+      "street obstruction"
+    ],
+    "location": {
+      "area": "CG Road, Navrangpura",
+      "wardId": "W-01",
+      "wardName": "Navrangpura",
+      "zone": "West Zone",
+      "office": "Navrangpura Ward Office, Stadium Road",
+      "contact": "+91-79-2640-1001"
+    },
+    "department": {
+      "id": "DEPT_SWM",
+      "name": "Solid Waste Management (Swachh Bharat Cell)",
+      "officer": "Chief Sanitation Officer",
+      "escalationLevel": "Director of Solid Waste Management"
+    },
+    "status": "FILED",
+    "slaHours": 24,
+    "eta": "2026-10-25T13:03:16.821Z",
+    "timeline": [
+      {
+        "status": "FILED",
+        "timestamp": "2026-10-24T13:03:16.821Z",
+        "note": "AI Agent registered grievance into Navrangpura Civic Desk. Routed to Solid Waste Management (Swachh Bharat Cell)."
+      }
+    ],
+    "socialPost": {
+      "text": "🚨 AMC Grievance #AMC-2026-2250: Solid Municipal Waste Overflow  Bio Hazard at CG Road, Navrangpura (West Zone). Urgent municipal action requested! cc: @AmdavadAMC @SwachhAhmedabad @RameshPatel_AMC #CivicLens #AhmedabadFirst",
+      "tags": [
+        "@AmdavadAMC",
+        "@SwachhAhmedabad",
+        "@RameshPatel_AMC"
+      ],
+      "tweetUrl": "https://twitter.com/intent/tweet?text=%F0%9F%9A%A8%20AMC%20Grievance%20%23AMC-2026-2250%3A%20Solid%20Municipal%20Waste%20Overflow%20%20Bio%20Hazard%20at%20CG%20Road%2C%20Navrangpura%20(West%20Zone).%20Urgent%20municipal%20action%20requested!%20cc%3A%20%40AmdavadAMC%20%40SwachhAhmedabad%20%40RameshPatel_AMC%20%23CivicLens%20%23AhmedabadFirst"
+    }
+  },
+  {
+    "ticketId": "AMC-2026-7937",
+    "createdAt": "2026-10-24T13:03:16.074Z",
+    "updatedAt": "2026-10-24T13:03:16.074Z",
+    "category": "garbage_dump",
+    "issueTitle": "Solid Municipal Waste Overflow  Bio Hazard",
+    "description": "Decomposed municipal waste spill over pedestrian walking lane generating vector pest risk and foul odor.",
+    "severity": "HIGH",
+    "hazardFactor": "Public health hazard, stray animal congregation, sidewalk blockage",
+    "detectedObjects": [
+      "solid waste",
+      "polythene accumulation",
+      "street obstruction"
+    ],
+    "location": {
+      "area": "CG Road, Navrangpura",
+      "wardId": "W-01",
+      "wardName": "Navrangpura",
+      "zone": "West Zone",
+      "office": "Navrangpura Ward Office, Stadium Road",
+      "contact": "+91-79-2640-1001"
+    },
+    "department": {
+      "id": "DEPT_SWM",
+      "name": "Solid Waste Management (Swachh Bharat Cell)",
+      "officer": "Chief Sanitation Officer",
+      "escalationLevel": "Director of Solid Waste Management"
+    },
+    "status": "FILED",
+    "slaHours": 24,
+    "eta": "2026-10-25T13:03:16.074Z",
+    "timeline": [
+      {
+        "status": "FILED",
+        "timestamp": "2026-10-24T13:03:16.074Z",
+        "note": "AI Agent registered grievance into Navrangpura Civic Desk. Routed to Solid Waste Management (Swachh Bharat Cell)."
+      }
+    ],
+    "socialPost": {
+      "text": "🚨 AMC Grievance #AMC-2026-7937: Solid Municipal Waste Overflow  Bio Hazard at CG Road, Navrangpura (West Zone). Urgent municipal action requested! cc: @AmdavadAMC @SwachhAhmedabad @RameshPatel_AMC #CivicLens #AhmedabadFirst",
+      "tags": [
+        "@AmdavadAMC",
+        "@SwachhAhmedabad",
+        "@RameshPatel_AMC"
+      ],
+      "tweetUrl": "https://twitter.com/intent/tweet?text=%F0%9F%9A%A8%20AMC%20Grievance%20%23AMC-2026-7937%3A%20Solid%20Municipal%20Waste%20Overflow%20%20Bio%20Hazard%20at%20CG%20Road%2C%20Navrangpura%20(West%20Zone).%20Urgent%20municipal%20action%20requested!%20cc%3A%20%40AmdavadAMC%20%40SwachhAhmedabad%20%40RameshPatel_AMC%20%23CivicLens%20%23AhmedabadFirst"
+    }
+  },
+  {
+    "ticketId": "AMC-2026-8826",
+    "createdAt": "2026-10-24T13:03:14.937Z",
+    "updatedAt": "2026-10-24T13:03:14.937Z",
+    "category": "garbage_dump",
+    "issueTitle": "Solid Municipal Waste Overflow  Bio Hazard",
+    "description": "Decomposed municipal waste spill over pedestrian walking lane generating vector pest risk and foul odor.",
+    "severity": "HIGH",
+    "hazardFactor": "Public health hazard, stray animal congregation, sidewalk blockage",
+    "detectedObjects": [
+      "solid waste",
+      "polythene accumulation",
+      "street obstruction"
+    ],
+    "location": {
+      "area": "CG Road, Navrangpura",
+      "wardId": "W-01",
+      "wardName": "Navrangpura",
+      "zone": "West Zone",
+      "office": "Navrangpura Ward Office, Stadium Road",
+      "contact": "+91-79-2640-1001"
+    },
+    "department": {
+      "id": "DEPT_SWM",
+      "name": "Solid Waste Management (Swachh Bharat Cell)",
+      "officer": "Chief Sanitation Officer",
+      "escalationLevel": "Director of Solid Waste Management"
+    },
+    "status": "FILED",
+    "slaHours": 24,
+    "eta": "2026-10-25T13:03:14.938Z",
+    "timeline": [
+      {
+        "status": "FILED",
+        "timestamp": "2026-10-24T13:03:14.937Z",
+        "note": "AI Agent registered grievance into Navrangpura Civic Desk. Routed to Solid Waste Management (Swachh Bharat Cell)."
+      }
+    ],
+    "socialPost": {
+      "text": "🚨 AMC Grievance #AMC-2026-8826: Solid Municipal Waste Overflow  Bio Hazard at CG Road, Navrangpura (West Zone). Urgent municipal action requested! cc: @AmdavadAMC @SwachhAhmedabad @RameshPatel_AMC #CivicLens #AhmedabadFirst",
+      "tags": [
+        "@AmdavadAMC",
+        "@SwachhAhmedabad",
+        "@RameshPatel_AMC"
+      ],
+      "tweetUrl": "https://twitter.com/intent/tweet?text=%F0%9F%9A%A8%20AMC%20Grievance%20%23AMC-2026-8826%3A%20Solid%20Municipal%20Waste%20Overflow%20%20Bio%20Hazard%20at%20CG%20Road%2C%20Navrangpura%20(West%20Zone).%20Urgent%20municipal%20action%20requested!%20cc%3A%20%40AmdavadAMC%20%40SwachhAhmedabad%20%40RameshPatel_AMC%20%23CivicLens%20%23AhmedabadFirst"
+    }
+  },
+  {
     "ticketId": "AMC-2026-1265",
     "createdAt": "2026-10-24T12:55:07.590Z",
     "updatedAt": "2026-10-24T12:55:07.590Z",

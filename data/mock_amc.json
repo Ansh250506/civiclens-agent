@@ -1,0 +1,115 @@
+{
+  "wards": [
+    {
+      "id": "W12",
+      "name": "Navrangpura",
+      "zone": "West",
+      "corporator": "Ramesh Patel (@RameshPatel_AMC)",
+      "areas": [
+        "Navrangpura",
+        "Stadium",
+        "CG Road",
+        "Mithakhali",
+        "Law Garden",
+        "Panjrapole"
+      ]
+    },
+    {
+      "id": "W18",
+      "name": "Bodakdev & Vastrapur",
+      "zone": "North-West",
+      "corporator": "Bhavna Ben Dave (@BhavnaDave_AMC)",
+      "areas": [
+        "Bodakdev",
+        "Vastrapur",
+        "Sindhu Bhavan",
+        "Judges Bungalow",
+        "SBR"
+      ]
+    },
+    {
+      "id": "W27",
+      "name": "Maninagar",
+      "zone": "South",
+      "corporator": "Kirit Shah (@KiritShah_AMC)",
+      "areas": [
+        "Maninagar",
+        "Kankaria",
+        "Jawahar Chowk",
+        "Dakshini",
+        "Rambagh"
+      ]
+    },
+    {
+      "id": "W34",
+      "name": "Satellite & Jodhpur",
+      "zone": "South-West",
+      "corporator": "Anil Sharma (@AnilSharma_AMC)",
+      "areas": [
+        "Satellite",
+        "Jodhpur",
+        "Shyamal",
+        "Shivranjani",
+        "Prahlad Nagar"
+      ]
+    },
+    {
+      "id": "W05",
+      "name": "Chandkheda & Sabarmati",
+      "zone": "West",
+      "corporator": "Mahesh Trivedi (@MaheshTrivedi_AMC)",
+      "areas": [
+        "Chandkheda",
+        "Sabarmati",
+        "Visat Circle",
+        "Motera"
+      ]
+    }
+  ],
+  "departments": {
+    "pothole": "Roads & Buildings",
+    "garbage": "Solid Waste Management",
+    "streetlight": "Light Department",
+    "waterlogging": "Storm Water Drainage"
+  },
+  "complaints": [
+    {
+      "trackingId": "AMC-2026-198208",
+      "ward": "W12",
+      "issue": "pothole",
+      "status": "Assigned",
+      "filedAt": "2026-10-24T13:58:27.039Z",
+      "wardName": "Navrangpura",
+      "zone": "West",
+      "department": "Roads & Buildings",
+      "issueTitle": "Deep Road Surface Crater  Bitumen Fracture",
+      "description": "Detected large asphalt cavity approx 50-80cm depth on arterial road. Critical hazard to commuters.",
+      "severity": "CRITICAL",
+      "area": "CG Road, Navrangpura",
+      "socialPost": {
+        "text": "🚨 AMC Grievance #AMC-2026-198208: pothole reported at CG Road, Navrangpura (Navrangpura Ward W12). Swift action requested! cc: @AmdavadAMC @RameshPatel_AMC #CivicLens #AMC",
+        "tweetUrl": "https://twitter.com/intent/tweet?text=%F0%9F%9A%A8%20AMC%20Grievance%20%23AMC-2026-198208%3A%20pothole%20reported%20at%20CG%20Road%2C%20Navrangpura%20(Navrangpura%20Ward%20W12).%20Swift%20action%20requested!%20cc%3A%20%40AmdavadAMC%20%40RameshPatel_AMC%20%23CivicLens%20%23AMC"
+      }
+    },
+    {
+      "trackingId": "AMC-2026-000123",
+      "ward": "W12",
+      "issue": "pothole",
+      "status": "Assigned",
+      "filedAt": "2026-10-24T17:20:00+05:30",
+      "area": "CG Road, Navrangpura",
+      "assignedTo": "Junior Engineer (Roads)",
+      "socialPost": "🚨 AMC Grievance #AMC-2026-000123: pothole reported at CG Road (Navrangpura Ward W12). Immediate action requested! cc: @AmdavadAMC @RameshPatel_AMC"
+    },
+    {
+      "trackingId": "AMC-2026-000456",
+      "ward": "W27",
+      "issue": "garbage",
+      "status": "In Progress",
+      "filedAt": "2026-10-24T15:10:00+05:30",
+      "area": "Kankaria, Maninagar",
+      "assignedTo": "Sanitation Inspector Unit #2",
+      "socialPost": "🚨 AMC Grievance #AMC-2026-000456: garbage reported at Kankaria (Maninagar Ward W27). cc: @AmdavadAMC @KiritShah_AMC"
+    }
+  ]
+}

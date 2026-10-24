@@ -4,9 +4,9 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const DATA_DIR = path.join(__dirname, 'data');
+const MOCK_AMC_PATH = path.join(__dirname, 'data', 'mock_amc.json');
 
-// LRU In-memory Cache for Ward and Department Lookups (Efficiency boost)
+// Fast LRU Cache
 class CacheManager {
   constructor(limit = 100) {
     this.limit = limit;
@@ -30,29 +30,25 @@ class CacheManager {
 
 const lookupCache = new CacheManager(250);
 
-// Safe atomic JSON loader with caching
-function loadJSON(file) {
-  const p = path.join(DATA_DIR, file);
-  if (!fs.existsSync(p)) return [];
-  return JSON.parse(fs.readFileSync(p, 'utf-8'));
+// Load the exact Mock AMC JSON database
+export function loadMockAMC() {
+  if (!fs.existsSync(MOCK_AMC_PATH)) {
+    return { wards: [], departments: {}, complaints: [] };
+  }
+  return JSON.parse(fs.readFileSync(MOCK_AMC_PATH, 'utf-8'));
 }
 
-function saveJSON(file, data) {
-  const p = path.join(DATA_DIR, file);
-  fs.writeFileSync(p, JSON.stringify(data, null, 2), 'utf-8');
+export function saveMockAMC(data) {
+  fs.writeFileSync(MOCK_AMC_PATH, JSON.stringify(data, null, 2), 'utf-8');
 }
 
-/**
- * Sanitizes strings against XSS and prototype injections
- */
 export function sanitizeInput(str) {
   if (typeof str !== 'string') return '';
   return str.replace(/[<>'"`;()&$]/g, '').trim().substring(0, 500);
 }
 
 /**
- * TOOL 1: Multimodal Civic Vision Pipeline
- * Supports Gemini 1.5 Flash Vision & Fallback Edge Heuristics
+ * TOOL 1: Multimodal Vision Analysis (Gemini + Edge Heuristic)
  */
 export async function analyzeCivicImage(imageBuffer, filename, mimeType, apiKey = null) {
   const activeKey = apiKey || process.env.GEMINI_API_KEY;
@@ -67,16 +63,15 @@ export async function analyzeCivicImage(imageBuffer, filename, mimeType, apiKey 
           contents: [{
             parts: [
               {
-                text: `You are an expert Indian Municipal Civic Inspector AI (AMC CivicLens). Inspect this photo and extract civic issues.
+                text: `You are an expert AMC Civic Inspector AI. Inspect this photo and extract civic issues.
 Return strictly valid JSON:
 {
-  "category": "pothole" | "garbage_dump" | "broken_streetlight" | "water_logging",
+  "category": "pothole" | "garbage" | "streetlight" | "waterlogging",
   "issueTitle": "short descriptive title",
-  "description": "detailed observations, hazard to citizens, dimensions or extent",
+  "description": "detailed observations and hazard factors",
   "severity": "CRITICAL" | "HIGH" | "MEDIUM" | "LOW",
-  "hazardFactor": "Risk of accidents / hygiene / electrocution",
-  "detectedObjects": ["pothole", "asphalt crack", "standing water"],
-  "confidence": 0.96
+  "detectedObjects": ["pothole", "cracked bitumen", "water", "debris"],
+  "confidence": 0.95
 }`
               },
               {
@@ -104,52 +99,47 @@ Return strictly valid JSON:
     }
   }
 
-  // Edge Heuristic Classifier
+  // Edge Heuristic Classifier matching official categories
   const nameLower = (filename || '').toLowerCase();
   let category = 'pothole';
-  let issueTitle = 'Dangerous Road Surface Crater & Bitumen Fracture';
-  let description = 'Detected large asphalt cavity approx 50-80cm depth on arterial transit corridor. Acute hazard for commuters.';
+  let issueTitle = 'Deep Road Surface Crater & Bitumen Fracture';
+  let description = 'Detected large asphalt cavity approx 50-80cm depth on arterial road. Critical hazard to commuters.';
   let severity = 'CRITICAL';
   let detectedObjects = ['pothole', 'broken bitumen', 'sub-base exposure'];
-  let hazardFactor = 'High risk of vehicular collision and rider displacement';
 
   if (nameLower.includes('garbage') || nameLower.includes('waste') || nameLower.includes('trash') || nameLower.includes('dump')) {
-    category = 'garbage_dump';
-    issueTitle = 'Unregulated Municipal Waste & Bio-hazard Dump';
-    description = 'Decomposed municipal waste spill over pedestrian walking lane generating vector pest risk and foul odor.';
+    category = 'garbage';
+    issueTitle = 'Unattended Municipal Solid Waste Dump';
+    description = 'Accumulated municipal refuse spilling over walkway, creating pest risk and foul odor.';
     severity = 'HIGH';
-    detectedObjects = ['solid waste', 'polythene accumulation', 'street obstruction'];
-    hazardFactor = 'Public health hazard, stray animal congregation, sidewalk blockage';
+    detectedObjects = ['solid waste', 'polythene accumulation', 'litter'];
   } else if (nameLower.includes('light') || nameLower.includes('pole') || nameLower.includes('lamp') || nameLower.includes('dark')) {
-    category = 'broken_streetlight';
-    issueTitle = 'Defective Luminaire & Exposed Electrical Conduit';
-    description = 'Exposed wiring junction box and non-operational streetlight fixture causing severe dark-spot.';
+    category = 'streetlight';
+    issueTitle = 'Non-Functional Luminaire & Damaged Wiring';
+    description = 'Exposed wiring junction box and shattered luminaire creating dark spot and electrocution risk.';
     severity = 'HIGH';
     detectedObjects = ['bent pole', 'damaged luminaire', 'exposed wire'];
-    hazardFactor = 'Electrocution hazard during moisture and pedestrian night vulnerability';
   } else if (nameLower.includes('water') || nameLower.includes('flood') || nameLower.includes('drain') || nameLower.includes('gutter')) {
-    category = 'water_logging';
-    issueTitle = 'Stormwater Inundation & Submerged Carriage-Way';
-    description = 'Stagnant wastewater pooling exceeding 15-25cm depth due to clogged storm inlet grates.';
+    category = 'waterlogging';
+    issueTitle = 'Stormwater Conduit Failure & Carriage Submergence';
+    description = 'Stagnant wastewater pooling exceeding 15-20cm depth obstructing public traffic flow.';
     severity = 'CRITICAL';
-    detectedObjects = ['stagnant water pool', 'submerged curb', 'clogged drain grate'];
-    hazardFactor = 'Mosquito breeding vector, vehicle stall hazard, foundation erosion';
+    detectedObjects = ['stagnant water pool', 'submerged curb', 'drainage overflow'];
   }
 
   return {
-    source: "CivicLens Vision Heuristics Engine (Edge Safe)",
+    source: "CivicLens Vision Heuristics Engine (Offline Safe)",
     category,
     issueTitle,
     description,
     severity,
-    hazardFactor,
     detectedObjects,
     confidence: 0.96
   };
 }
 
 /**
- * TOOL 2: Spatial Ward & Department Resolver with O(1) LRU Caching
+ * TOOL 2: Ward and Department Lookup (Using exact Mock AMC starter schema)
  */
 export function lookupWardAndDepartment(areaOrLocation, category) {
   const sanitizedLoc = sanitizeInput(areaOrLocation).toLowerCase();
@@ -158,18 +148,17 @@ export function lookupWardAndDepartment(areaOrLocation, category) {
   const cached = lookupCache.get(cacheKey);
   if (cached) return cached;
 
-  const wards = loadJSON('wards.json');
-  const departments = loadJSON('departments.json');
-
+  const db = loadMockAMC();
   let matchedWard = null;
+
   if (sanitizedLoc) {
-    for (const ward of wards) {
-      if (ward.wardName.toLowerCase().includes(sanitizedLoc) || ward.zone.toLowerCase().includes(sanitizedLoc)) {
+    for (const ward of db.wards) {
+      if (ward.name.toLowerCase().includes(sanitizedLoc) || ward.id.toLowerCase() === sanitizedLoc) {
         matchedWard = ward;
         break;
       }
-      for (const kw of ward.keywords) {
-        if (sanitizedLoc.includes(kw) || kw.includes(sanitizedLoc)) {
+      for (const area of ward.areas) {
+        if (sanitizedLoc.includes(area.toLowerCase()) || area.toLowerCase().includes(sanitizedLoc)) {
           matchedWard = ward;
           break;
         }
@@ -179,114 +168,102 @@ export function lookupWardAndDepartment(areaOrLocation, category) {
   }
 
   if (!matchedWard) {
-    matchedWard = wards[0]; // Default Navrangpura
+    matchedWard = db.wards[0]; // Default Navrangpura W12
   }
 
-  let matchedDept = departments.find(d => d.categories.includes(category)) || departments[0];
+  // Exact matching against "departments" mapping in Mock AMC JSON:
+  // "pothole": "Roads & Buildings"
+  // "garbage": "Solid Waste Management"
+  // "streetlight": "Light Department"
+  // "waterlogging": "Storm Water Drainage"
+  const departmentName = db.departments[category] || db.departments['pothole'] || 'Roads & Buildings';
 
-  const result = { ward: matchedWard, department: matchedDept };
+  const result = {
+    ward: matchedWard,
+    department: departmentName
+  };
+
   lookupCache.set(cacheKey, result);
   return result;
 }
 
 /**
- * TOOL 3: Ticket Creation Engine with Input Sanitization & Audit Trail
+ * TOOL 3: Ticket Creation Engine (Writes to "complaints" array in mock_amc.json)
  */
 export function createComplaintTicket(ticketData) {
-  const tickets = loadJSON('tickets.json');
-  const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-  const ticketId = `AMC-2026-${randomSuffix}`;
+  const db = loadMockAMC();
+  const randomSuffix = String(Math.floor(100 + Math.random() * 900000)).padStart(6, '0');
+  const trackingId = `AMC-2026-${randomSuffix}`;
   const now = new Date().toISOString();
-  const etaDate = new Date(Date.now() + (ticketData.department?.slaHours || 48) * 3600000).toISOString();
 
-  const deptTag = ticketData.department?.officialTwitter || '@AmdavadAMC';
+  const areaStr = sanitizeInput(ticketData.areaInput) || ticketData.ward?.name || 'Ahmedabad';
   const corporatorTag = ticketData.ward?.corporator?.match(/@\w+/)?.[0] || '@AmdavadAMC';
-  const cleanArea = sanitizeInput(ticketData.areaInput) || ticketData.ward?.wardName || 'Ahmedabad';
-  const cleanTitle = sanitizeInput(ticketData.issueTitle);
+  const issueName = ticketData.category || 'pothole';
 
-  const socialText = `🚨 AMC Grievance #${ticketId}: ${cleanTitle} at ${cleanArea} (${ticketData.ward?.zone}). Urgent municipal action requested! cc: @AmdavadAMC ${deptTag} ${corporatorTag} #CivicLens #AhmedabadFirst`;
+  const socialText = `🚨 AMC Grievance #${trackingId}: ${issueName} reported at ${areaStr} (${ticketData.ward?.name} Ward ${ticketData.ward?.id}). Swift action requested! cc: @AmdavadAMC ${corporatorTag} #CivicLens #AMC`;
 
-  const newTicket = {
-    ticketId,
-    createdAt: now,
-    updatedAt: now,
-    category: ticketData.category || 'pothole',
-    issueTitle: cleanTitle,
+  const newComplaint = {
+    trackingId,
+    ward: ticketData.ward?.id || 'W12',
+    issue: issueName,
+    status: 'Assigned',
+    filedAt: now,
+    // Rich details for UI presentation:
+    wardName: ticketData.ward?.name || 'Navrangpura',
+    zone: ticketData.ward?.zone || 'West',
+    department: ticketData.department || 'Roads & Buildings',
+    issueTitle: sanitizeInput(ticketData.issueTitle) || `${issueName.toUpperCase()} Incident`,
     description: sanitizeInput(ticketData.description),
     severity: ticketData.severity || 'HIGH',
-    hazardFactor: sanitizeInput(ticketData.hazardFactor) || 'Public inconvenience',
-    detectedObjects: ticketData.detectedObjects || [],
-    location: {
-      area: cleanArea,
-      wardId: ticketData.ward?.wardId || 'W-01',
-      wardName: ticketData.ward?.wardName || 'Navrangpura',
-      zone: ticketData.ward?.zone || 'West Zone',
-      office: ticketData.ward?.office || 'Ward Office',
-      contact: ticketData.ward?.contact || '+91-79-0000-0000'
-    },
-    department: {
-      id: ticketData.department?.id || 'DEPT_ROADS',
-      name: ticketData.department?.name || 'Roads & Bridges',
-      officer: ticketData.department?.officer || 'Executive Engineer',
-      escalationLevel: ticketData.department?.escalationLevel || 'Zonal Commissioner'
-    },
-    status: 'FILED',
-    slaHours: ticketData.department?.slaHours || 48,
-    eta: etaDate,
-    timeline: [
-      {
-        status: 'FILED',
-        timestamp: now,
-        note: `AI Agent registered grievance into ${ticketData.ward?.wardName} Civic Desk. Routed to ${ticketData.department?.name}.`
-      }
-    ],
+    area: areaStr,
     socialPost: {
       text: socialText,
-      tags: ['@AmdavadAMC', deptTag, corporatorTag],
       tweetUrl: `https://twitter.com/intent/tweet?text=${encodeURIComponent(socialText)}`
     }
   };
 
-  tickets.unshift(newTicket);
-  saveJSON('tickets.json', tickets);
-  return newTicket;
+  db.complaints.unshift(newComplaint);
+  saveMockAMC(db);
+  return newComplaint;
 }
 
 /**
- * TOOL 4: Conversational Status Fetch with Regex & Fuzzy Parsing
+ * TOOL 4: Status Fetch (Queries "complaints" array in mock_amc.json)
  */
 export function getTicketStatus(query) {
-  const tickets = loadJSON('tickets.json');
+  const db = loadMockAMC();
   const clean = sanitizeInput(query);
 
   if (!clean) {
     return {
       success: true,
-      count: tickets.length,
-      latestTicket: tickets[0],
-      allTickets: tickets.slice(0, 5)
+      count: db.complaints.length,
+      latestTicket: db.complaints[0],
+      allTickets: db.complaints.slice(0, 5)
     };
   }
 
   const cleanUpper = clean.toUpperCase();
-  const match = cleanUpper.match(/AMC-2026-\d{4}/) || cleanUpper.match(/\d{4}/);
+  const match = cleanUpper.match(/AMC-2026-\d+/) || cleanUpper.match(/\d{4,6}/);
 
   if (match) {
     const idToFind = match[0].startsWith('AMC') ? match[0] : `AMC-2026-${match[0]}`;
-    const ticket = tickets.find(t => t.ticketId === idToFind);
-    if (ticket) {
+    const found = db.complaints.find(c => c.trackingId === idToFind);
+    if (found) {
       return {
         success: true,
-        ticket,
-        message: `Ticket **${ticket.ticketId}** is currently **${ticket.status}** with ${ticket.department.name}. Estimated resolution: ${new Date(ticket.eta).toLocaleString()}.`
+        ticket: found,
+        message: `Ticket **${found.trackingId}** (${found.issue}) is currently **${found.status}** with ${found.department || 'AMC'}. Ward: ${found.wardName || found.ward}.`
       };
     }
   }
 
-  const matched = tickets.filter(t => 
-    t.issueTitle.toLowerCase().includes(clean.toLowerCase()) ||
-    t.location.area.toLowerCase().includes(clean.toLowerCase()) ||
-    t.location.wardName.toLowerCase().includes(clean.toLowerCase())
+  // Search by keyword, ward, or area
+  const matched = db.complaints.filter(c => 
+    (c.issue && c.issue.toLowerCase().includes(clean.toLowerCase())) ||
+    (c.area && c.area.toLowerCase().includes(clean.toLowerCase())) ||
+    (c.ward && c.ward.toLowerCase() === clean.toLowerCase()) ||
+    (c.wardName && c.wardName.toLowerCase().includes(clean.toLowerCase()))
   );
 
   if (matched.length > 0) {
@@ -294,12 +271,12 @@ export function getTicketStatus(query) {
       success: true,
       ticket: matched[0],
       candidates: matched,
-      message: `Found ticket **${matched[0].ticketId}** (${matched[0].issueTitle}) in ${matched[0].location.wardName}. Status: **${matched[0].status}**.`
+      message: `Found ticket **${matched[0].trackingId}** (${matched[0].issue}) in Ward **${matched[0].ward}** (${matched[0].area}). Status: **${matched[0].status}**.`
     };
   }
 
   return {
     success: false,
-    message: `No grievance found matching "${clean}". Check Ticket ID (e.g., AMC-2026-8941) or provide your area name.`
+    message: `No complaint found matching "${clean}". Check tracking ID (e.g. AMC-2026-000123) or area name.`
   };
 }

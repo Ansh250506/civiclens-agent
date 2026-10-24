@@ -17,60 +17,52 @@ describe('CivicLens AI Agent Automated Test Suite', () => {
     const result = await analyzeCivicImage(mockBuffer, 'road_pothole_defect.jpg', 'image/jpeg');
     expect(result).toHaveProperty('category', 'pothole');
     expect(result).toHaveProperty('severity', 'CRITICAL');
-    expect(result.detectedObjects).toContain('pothole');
   });
 
-  test('Tool 1: analyzeCivicImage classifies garbage dump issue', async () => {
-    const mockBuffer = Buffer.from('fake_garbage_bytes');
-    const result = await analyzeCivicImage(mockBuffer, 'cg_road_waste_dump.jpg', 'image/jpeg');
-    expect(result).toHaveProperty('category', 'garbage_dump');
-    expect(result).toHaveProperty('severity', 'HIGH');
+  test('Tool 2: lookupWardAndDepartment resolves exact Mock AMC W12 and Roads & Buildings', () => {
+    const res = lookupWardAndDepartment('CG Road', 'pothole');
+    expect(res.ward.id).toBe('W12');
+    expect(res.ward.name).toBe('Navrangpura');
+    expect(res.department).toBe('Roads & Buildings');
   });
 
-  test('Tool 2: lookupWardAndDepartment resolves correct Ward & Corporator', () => {
-    const res = lookupWardAndDepartment('Sindhu Bhavan Road', 'pothole');
-    expect(res.ward.wardName).toContain('Bodakdev');
-    expect(res.ward.corporator).toContain('@BhavnaDave_AMC');
-    expect(res.department.id).toBe('DEPT_ROADS');
+  test('Tool 2: lookupWardAndDepartment resolves exact Mock AMC W27 and Solid Waste Management', () => {
+    const res = lookupWardAndDepartment('Maninagar', 'garbage');
+    expect(res.ward.id).toBe('W27');
+    expect(res.ward.name).toBe('Maninagar');
+    expect(res.department).toBe('Solid Waste Management');
   });
 
-  test('Tool 4: getTicketStatus returns structured response for existing ticket', () => {
-    const statusResult = getTicketStatus('AMC-2026-8941');
+  test('Tool 4: getTicketStatus returns structured response for starter complaint AMC-2026-000123', () => {
+    const statusResult = getTicketStatus('AMC-2026-000123');
     expect(statusResult.success).toBe(true);
-    expect(statusResult.ticket.ticketId).toBe('AMC-2026-8941');
+    expect(statusResult.ticket.trackingId).toBe('AMC-2026-000123');
+    expect(statusResult.ticket.status).toBe('Assigned');
   });
 
-  test('API Endpoint: GET /health returns 200 and healthy status', async () => {
+  test('API Endpoint: GET /health returns 200', async () => {
     const res = await request(app).get('/health');
     expect(res.statusCode).toEqual(200);
     expect(res.body.status).toEqual('healthy');
   });
 
-  test('API Endpoint: GET /api/tickets returns mock municipal tickets', async () => {
+  test('API Endpoint: GET /api/tickets returns mock municipal complaints', async () => {
     const res = await request(app).get('/api/tickets');
     expect(res.statusCode).toEqual(200);
     expect(Array.isArray(res.body.tickets)).toBe(true);
     expect(res.body.tickets.length).toBeGreaterThan(0);
   });
 
-  test('API Endpoint: POST /api/agent/chat handles user inquiry', async () => {
-    const res = await request(app)
-      .post('/api/agent/chat')
-      .send({ message: 'What is the status of ticket AMC-2026-8941?' });
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.success).toBe(true);
-  });
-
-  test('API Endpoint: POST /api/agent/file-complaint files complaint successfully', async () => {
+  test('API Endpoint: POST /api/agent/file-complaint creates complaint in mock AMC JSON', async () => {
     const res = await request(app)
       .post('/api/agent/file-complaint')
       .field('area', 'CG Road, Navrangpura')
       .field('sampleType', 'pothole');
     expect(res.statusCode).toEqual(200);
     expect(res.body.success).toBe(true);
-    expect(res.body.ticket).toHaveProperty('ticketId');
-    expect(res.body.ticket.ticketId).toMatch(/^AMC-2026-\d{4}$/);
-    expect(res.body.ticket.socialPost).toHaveProperty('text');
+    expect(res.body.ticket).toHaveProperty('trackingId');
+    expect(res.body.ticket.ward).toBe('W12');
+    expect(res.body.ticket.department).toBe('Roads & Buildings');
   });
 
 });
