@@ -1,0 +1,65 @@
+[
+  {
+    "wardId": "W-01",
+    "wardName": "Navrangpura",
+    "zone": "West Zone",
+    "corporator": "Ramesh Patel (@RameshPatel_AMC)",
+    "office": "Navrangpura Ward Office, Stadium Road",
+    "contact": "+91-79-2640-1001",
+    "keywords": ["navrangpura", "stadium", "cg road", "mithakhali", "law garden", "gujarat university", "panjrapole"]
+  },
+  {
+    "wardId": "W-02",
+    "wardName": "Bodakdev & Vastrapur",
+    "zone": "North-West Zone",
+    "corporator": "Bhavna Ben Dave (@BhavnaDave_AMC)",
+    "office": "Bodakdev Civic Center, Judges Bungalow Rd",
+    "contact": "+91-79-2687-2002",
+    "keywords": ["bodakdev", "vastrapur", "judges bungalow", "sindhu bhavan", "sbr", "iim road", "alpha one", "vastrapur lake"]
+  },
+  {
+    "wardId": "W-03",
+    "wardName": "Maninagar",
+    "zone": "South Zone",
+    "corporator": "Kirit Shah (@KiritShah_AMC)",
+    "office": "Maninagar Ward Office, Kankaria South",
+    "contact": "+91-79-2546-3003",
+    "keywords": ["maninagar", "kankaria", "dakshini", "rambagh", "bhairavnath", "pushpakunj"]
+  },
+  {
+    "wardId": "W-04",
+    "wardName": "Satellite & Jodhpur",
+    "zone": "South-West Zone",
+    "corporator": "Anil Sharma (@AnilSharma_AMC)",
+    "office": "Jodhpur Ward Complex, Shyamal Cross Rd",
+    "contact": "+91-79-2692-4004",
+    "keywords": ["satellite", "jodhpur", "shyamal", "shivranjani", "iscon", "prahlad nagar", "vejalpur", "sg highway"]
+  },
+  {
+    "wardId": "W-05",
+    "wardName": "Sabarmati & Chandkheda",
+    "zone": "West Zone",
+    "corporator": "Mahesh Trivedi (@MaheshTrivedi_AMC)",
+    "office": "Chandkheda Zonal Office, Near Visat Circle",
+    "contact": "+91-79-2750-5005",
+    "keywords": ["sabarmati", "chandkheda", "motera", "visat", "narendra modi stadium", "d-cabin", "zundal"]
+  },
+  {
+    "wardId": "W-06",
+    "wardName": "Ghatlodiya & Sola",
+    "zone": "North-West Zone",
+    "corporator": "Deepak Patel (@DeepakPatel_AMC)",
+    "office": "Ghatlodiya Sub-Zonal Office, Science City Rd",
+    "contact": "+91-79-2747-6006",
+    "keywords": ["ghatlodiya", "sola", "science city", "chankyapuri", "kk nagar", "shukan"]
+  },
+  {
+    "wardId": "W-07",
+    "wardName": "Jamalpur & Khadia (Old City)",
+    "zone": "Central Zone",
+    "corporator": "Farooq Sheikh (@FarooqSheikh_AMC)",
+    "office": "Khadia Ward Office, Teen Darwaza",
+    "contact": "+91-79-2214-7007",
+    "keywords": ["jamalpur", "khadia", "teen darwaza", "manek chowk", "kalupur", "lal darwaza", "astodia", "relief road", "raipur"]
+  }
+]

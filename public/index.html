@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CivicLens AI — Autonomous Municipal Grievance Agent (AMC)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #0b0f19;
+      color: #f1f5f9;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .gradient-border {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.4), rgba(59, 130, 246, 0.4));
+    }
+    .glass-panel {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .badge-pothole { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge-garbage { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-light { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .badge-drainage { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+    
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+      50% { box-shadow: 0 0 25px rgba(59, 130, 246, 0.6); }
+    }
+    .pulse-agent {
+      animation: pulseGlow 2.5s infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
+
+  <!-- Top Navigation Header -->
+  <header class="glass-panel sticky top-0 z-50 px-6 py-4 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-600 flex items-center justify-center shadow-lg shadow-rose-500/20">
+          <i class="fa-solid fa-camera-viewfinder text-white text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">CivicLens AI</span>
+            <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-semibold">AMC Live Pilot</span>
+          </div>
+          <p class="text-xs text-slate-400">Autonomous Municipal Civic Grievance & Ward Routing Agent</p>
+        </div>
+      </div>
+
+      <!-- Action badges -->
+      <div class="flex items-center space-x-4">
+        <div class="hidden md:flex items-center space-x-2 text-xs bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span class="text-slate-300">AMC Municipal Server Connected</span>
+        </div>
+        <button onclick="document.getElementById('apiKeyModal').classList.toggle('hidden')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-600 transition flex items-center space-x-1.5">
+          <i class="fa-solid fa-key text-amber-400"></i>
+          <span>API Key (Optional)</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl mx-auto w-full p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- LEFT COLUMN: PHOTO INPUT & AGENT EXECUTION -->
+    <div class="lg:col-span-7 space-y-6">
+
+      <!-- Step 1 Card: Photo & Location Upload -->
+      <div class="glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl relative overflow-hidden">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xs border border-blue-500/40">1</span>
+            <h2 class="text-lg font-bold text-white">Capture / Upload Civic Issue Photo</h2>
+          </div>
+          <span class="text-xs text-slate-400">Pothole • Garbage • Water Logging • Streetlight</span>
+        </div>
+
+        <!-- Sample Quick Clicks -->
+        <div class="mb-4">
+          <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-2">⚡ Or Try Quick Samples (Mendeley / Roboflow Dataset)</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button onclick="selectSample('pothole', 'Deep Crater on Sindhu Bhavan Road', 'Sindhu Bhavan Road, Bodakdev')" class="sample-btn text-left p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 border border-slate-700/60 transition group">
+              <div class="flex items-center space-x-2 text-rose-400 text-xs font-semibold mb-1">
+                <i class="fa-solid fa-road-circle-exclamation"></i>
+                <span>Pothole</span>
+              </div>
+              <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate">Sindhu Bhavan Rd</p>
+            </button>
+
+            <button onclick="selectSample('garbage', 'Unattended Mixed Garbage Dump', 'CG Road, Navrangpura')" class="sample-btn text-left p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 border border-slate-700/60 transition group">
+              <div class="flex items-center space-x-2 text-amber-400 text-xs font-semibold mb-1">
+                <i class="fa-solid fa-trash-can"></i>
+                <span>Garbage</span>
+              </div>
+              <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate">CG Road Market</p>
+            </button>
+
+            <button onclick="selectSample('waterlogging', 'Severe Water Logging on Sub-Artery', 'Maninagar, Kankaria Road')" class="sample-btn text-left p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 border border-slate-700/60 transition group">
+              <div class="flex items-center space-x-2 text-blue-400 text-xs font-semibold mb-1">
+                <i class="fa-solid fa-water"></i>
+                <span>Water Log</span>
+              </div>
+              <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate">Maninagar Circle</p>
+            </button>
+
+            <button onclick="selectSample('streetlight', 'Broken Streetlight & Exposed Joint', 'Chandkheda, Near Visat Circle')" class="sample-btn text-left p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-700/80 border border-slate-700/60 transition group">
+              <div class="flex items-center space-x-2 text-purple-400 text-xs font-semibold mb-1">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>Streetlight</span>
+              </div>
+              <p class="text-[11px] text-slate-400 group-hover:text-slate-200 truncate">Visat Circle</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- Photo Upload Dropzone -->
+        <div id="dropzone" onclick="document.getElementById('fileInput').click()" class="border-2 border-dashed border-slate-700 hover:border-blue-500/70 rounded-xl p-6 text-center cursor-pointer transition bg-slate-900/40 relative">
+          <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileSelected(event)">
+          
+          <div id="uploadPrompt" class="space-y-2">
+            <div class="w-12 h-12 mx-auto rounded-full bg-slate-800 flex items-center justify-center text-blue-400 text-xl">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+            </div>
+            <p class="text-sm font-medium text-slate-300">Click to upload photo or drag & drop</p>
+            <p class="text-xs text-slate-500">Supports JPG, PNG, WEBP (Road, Garbage, Drain, Light)</p>
+          </div>
+
+          <div id="imagePreviewContainer" class="hidden">
+            <img id="previewImg" class="max-h-56 mx-auto rounded-lg shadow-md object-cover border border-slate-700">
+            <p id="fileNameDisplay" class="text-xs text-emerald-400 mt-2 font-mono"></p>
+          </div>
+        </div>
+
+        <!-- Location & Details Form -->
+        <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1">Location / Landmark / Area Name</label>
+            <div class="relative">
+              <input type="text" id="areaInput" placeholder="e.g. Sindhu Bhavan Road, Bodakdev" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500">
+              <button type="button" onclick="detectGPSLocation()" class="absolute right-2.5 top-2.5 text-xs text-blue-400 hover:text-blue-300">
+                <i class="fa-solid fa-location-crosshairs mr-1"></i>GPS
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xs font-semibold text-slate-400 block mb-1">Custom Issue Title (Optional)</label>
+            <input type="text" id="customTitleInput" placeholder="Agent will auto-generate if empty" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500">
+          </div>
+        </div>
+
+        <!-- Agent Trigger Button -->
+        <button id="agentRunBtn" onclick="runAutonomousAgent()" class="w-full mt-5 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white font-bold py-3.5 px-6 rounded-xl transition shadow-lg shadow-indigo-600/25 flex items-center justify-center space-x-2 pulse-agent">
+          <i class="fa-solid fa-robot"></i>
+          <span>Execute Autonomous Filing Agent</span>
+        </button>
+      </div>
+
+      <!-- Live Agent Pipeline Logs & Step-by-Step Visualization -->
+      <div id="pipelineDisplay" class="glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl hidden">
+        <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+          <div class="flex items-center space-x-2">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 font-bold text-xs border border-indigo-500/40">2</span>
+            <h3 class="text-md font-bold text-white">Agent Multi-Tool Execution Pipeline</h3>
+          </div>
+          <span id="pipelineStatusBadge" class="text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2.5 py-1 rounded-full font-mono font-medium">Running...</span>
+        </div>
+
+        <!-- Pipeline Steps Grid -->
+        <div class="space-y-3 font-mono text-xs">
+          <!-- Tool 1 -->
+          <div id="stepCard1" class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start space-x-3 transition">
+            <div id="stepIcon1" class="mt-0.5 text-blue-400 text-sm">
+              <i class="fa-solid fa-circle-notch fa-spin"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-bold text-slate-200">TOOL 1: Multimodal Vision Inspection</span>
+                <span class="text-[10px] text-slate-500">analyzeCivicImage()</span>
+              </div>
+              <p id="stepDetail1" class="text-slate-400 text-[11px]">Extracting civic defect features, hazard classification & severity level...</p>
+            </div>
+          </div>
+
+          <!-- Tool 2 -->
+          <div id="stepCard2" class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start space-x-3 transition">
+            <div id="stepIcon2" class="mt-0.5 text-slate-500 text-sm">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-bold text-slate-200">TOOL 2: Ward & Department Resolver</span>
+                <span class="text-[10px] text-slate-500">lookupWardAndDepartment()</span>
+              </div>
+              <p id="stepDetail2" class="text-slate-400 text-[11px]">Mapping geo location to AMC Ward, Corporator and accountable AMC department...</p>
+            </div>
+          </div>
+
+          <!-- Tool 3 -->
+          <div id="stepCard3" class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start space-x-3 transition">
+            <div id="stepIcon3" class="mt-0.5 text-slate-500 text-sm">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-center mb-1">
+                <span class="font-bold text-slate-200">TOOL 3: Database Ticket Creation & Social Draft</span>
+                <span class="text-[10px] text-slate-500">createComplaintTicket()</span>
+              </div>
+              <p id="stepDetail3" class="text-slate-400 text-[11px]">Writing grievance record to AMC Central DB and generating social accountability draft...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Ticket Card (Shown upon completion) -->
+        <div id="ticketResultBox" class="mt-5 p-4 rounded-xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/40 border border-indigo-500/30 hidden">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+            <div class="flex items-center space-x-2">
+              <span class="text-xs text-slate-400 uppercase font-semibold">Grievance Tracking ID:</span>
+              <span id="resTicketId" class="text-base font-extrabold text-indigo-400 font-mono tracking-wide">AMC-2026-XXXX</span>
+            </div>
+            <span id="resSeverityBadge" class="text-[10px] px-2 py-0.5 rounded font-bold uppercase">CRITICAL</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+            <div>
+              <span class="text-slate-400 text-[11px]">Assigned Ward:</span>
+              <p id="resWardName" class="font-bold text-slate-200 truncate">-</p>
+            </div>
+            <div>
+              <span class="text-slate-400 text-[11px]">Department:</span>
+              <p id="resDeptName" class="font-bold text-slate-200 truncate">-</p>
+            </div>
+            <div>
+              <span class="text-slate-400 text-[11px]">Target SLA:</span>
+              <p id="resSla" class="font-bold text-amber-400">-</p>
+            </div>
+            <div>
+              <span class="text-slate-400 text-[11px]">Responsible Officer:</span>
+              <p id="resOfficer" class="font-bold text-slate-200 truncate">-</p>
+            </div>
+          </div>
+
+          <!-- Social Post Draft Container (Requirement Bonus!) -->
+          <div class="mt-3 p-3 bg-slate-800/80 rounded-lg border border-slate-700/80">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[11px] font-bold text-sky-400 flex items-center space-x-1">
+                <i class="fa-brands fa-x-twitter"></i>
+                <span>Auto-Drafted Social Escalation Post</span>
+              </span>
+              <a id="tweetNowBtn" href="#" target="_blank" class="text-[11px] bg-sky-500 hover:bg-sky-400 text-white font-semibold px-2.5 py-1 rounded transition flex items-center space-x-1">
+                <i class="fa-brands fa-x-twitter"></i>
+                <span>Post on X</span>
+              </a>
+            </div>
+            <p id="resSocialText" class="text-xs text-slate-300 italic font-mono leading-relaxed"></p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: CHAT STATUS AGENT & LIVE AMC MUNICIPAL LEDGER -->
+    <div class="lg:col-span-5 space-y-6">
+
+      <!-- Conversational Status Agent -->
+      <div class="glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl flex flex-col h-[420px]">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+          <div class="flex items-center space-x-2">
+            <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm border border-emerald-500/40">
+              <i class="fa-solid fa-headset"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white">Ask Status Agent</h3>
+              <p class="text-[10px] text-slate-400">"What's the status?", "Track AMC-2026-8941"</p>
+            </div>
+          </div>
+          <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded">Live Agent</span>
+        </div>
+
+        <!-- Chat messages area -->
+        <div id="chatMessages" class="flex-1 overflow-y-auto space-y-3 pr-1 text-xs font-mono">
+          <div class="flex items-start space-x-2">
+            <div class="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-white text-[10px] shrink-0 font-bold">
+              AI
+            </div>
+            <div class="bg-slate-800/80 border border-slate-700/80 p-2.5 rounded-xl rounded-tl-none text-slate-300 leading-relaxed">
+              Namaste! I am your AMC CivicLens status assistant. You can ask me:
+              <ul class="list-disc pl-4 mt-1.5 space-y-1 text-[11px] text-slate-400">
+                <li><span class="text-blue-400 cursor-pointer hover:underline" onclick="askQuickPrompt('What is the status of my recent ticket?')">"What is the status of my recent ticket?"</span></li>
+                <li><span class="text-blue-400 cursor-pointer hover:underline" onclick="askQuickPrompt('Status of AMC-2026-8941')">"Status of AMC-2026-8941"</span></li>
+                <li><span class="text-blue-400 cursor-pointer hover:underline" onclick="askQuickPrompt('Check potholes in Bodakdev')">"Check potholes in Bodakdev"</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Input Form -->
+        <form onsubmit="handleChatSubmit(event)" class="mt-3 flex items-center space-x-2 pt-2 border-t border-slate-800">
+          <input type="text" id="chatInput" placeholder="Ask: 'What's the status?'" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500">
+          <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white rounded-xl px-3 py-2 text-xs font-semibold transition">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- Live Mock Municipal Database Explorer -->
+      <div class="glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-database text-amber-400 text-sm"></i>
+            <h3 class="text-sm font-bold text-white">Mock AMC Central Grievance Ledger</h3>
+          </div>
+          <button onclick="refreshTickets()" class="text-slate-400 hover:text-white text-xs">
+            <i class="fa-solid fa-rotate-right"></i> Refresh
+          </button>
+        </div>
+
+        <div id="ticketsList" class="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
+          <!-- Populated dynamically via JS -->
+          <div class="text-center py-6 text-slate-500 text-xs">Loading AMC Municipal Tickets...</div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Optional API Key Modal -->
+  <div id="apiKeyModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-md w-full rounded-2xl p-6 shadow-2xl">
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="text-base font-bold text-white flex items-center space-x-2">
+          <i class="fa-solid fa-key text-amber-400"></i>
+          <span>Provide Gemini API Key</span>
+        </h3>
+        <button onclick="document.getElementById('apiKeyModal').classList.add('hidden')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+        If you have a Gemini API Key, paste it here for live Multimodal Vision. If left blank, the app uses its robust <strong class="text-emerald-400">built-in Computer Vision heuristics engine</strong> so you can present without failing!
+      </p>
+      <input type="password" id="userKeyInput" placeholder="AIzaSy..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400 mb-4">
+      <div class="flex justify-end space-x-2">
+        <button onclick="saveApiKey()" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition">
+          Save Key
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedFile = null;
+    let selectedSampleType = null;
+    let activeApiKey = localStorage.getItem('civic_gemini_key') || '';
+
+    if (activeApiKey) {
+      document.getElementById('userKeyInput').value = activeApiKey;
+    }
+
+    function saveApiKey() {
+      const val = document.getElementById('userKeyInput').value.trim();
+      localStorage.setItem('civic_gemini_key', val);
+      activeApiKey = val;
+      document.getElementById('apiKeyModal').classList.add('hidden');
+      alert(val ? 'Gemini API Key activated for live Vision multimodal calls!' : 'Key cleared. Running in Offline Heuristic mode.');
+    }
+
+    function selectSample(type, title, area) {
+      selectedSampleType = type;
+      selectedFile = null;
+      document.getElementById('areaInput').value = area;
+      document.getElementById('customTitleInput').value = title;
+      
+      const uploadPrompt = document.getElementById('uploadPrompt');
+      const previewContainer = document.getElementById('imagePreviewContainer');
+      const previewImg = document.getElementById('previewImg');
+      const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+      uploadPrompt.classList.add('hidden');
+      previewContainer.classList.remove('hidden');
+
+      // Visual representative illustrations for instant zero-dependency demonstration
+      const sampleGraphics = {
+        pothole: "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=600&auto=format&fit=crop&q=80",
+        garbage: "https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?w=600&auto=format&fit=crop&q=80",
+        waterlogging: "https://images.unsplash.com/photo-1547683905-f686c993aae5?w=600&auto=format&fit=crop&q=80",
+        streetlight: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop&q=80"
+      };
+
+      previewImg.src = sampleGraphics[type] || sampleGraphics.pothole;
+      fileNameDisplay.textContent = `[Sample Dataset Loaded: ${type.toUpperCase()}_CASE_01]`;
+    }
+
+    function handleFileSelected(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      selectedFile = file;
+      selectedSampleType = null;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById('uploadPrompt').classList.add('hidden');
+        document.getElementById('imagePreviewContainer').classList.remove('hidden');
+        document.getElementById('previewImg').src = e.target.result;
+        document.getElementById('fileNameDisplay').textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function detectGPSLocation() {
+      const areaInput = document.getElementById('areaInput');
+      areaInput.value = 'Locating GPS...';
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            areaInput.value = `Near SG Highway, Bodakdev (GPS: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)})`;
+          },
+          (err) => {
+            areaInput.value = 'Navrangpura, Near Gujarat University (Default GPS)';
+          }
+        );
+      } else {
+        areaInput.value = 'Bodakdev, Judges Bungalow Road';
+      }
+    }
+
+    async function runAutonomousAgent() {
+      if (!selectedFile && !selectedSampleType) {
+        alert('Please either select one of the 4 quick samples or upload a civic inspection photo.');
+        return;
+      }
+
+      const area = document.getElementById('areaInput').value.trim() || 'Navrangpura';
+      const customTitle = document.getElementById('customTitleInput').value.trim();
+
+      // Show Pipeline Box
+      const pipelineBox = document.getElementById('pipelineDisplay');
+      pipelineBox.classList.remove('hidden');
+      document.getElementById('ticketResultBox').classList.add('hidden');
+      document.getElementById('pipelineStatusBadge').textContent = 'Executing Agent Tools...';
+      document.getElementById('pipelineStatusBadge').className = 'text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full font-mono font-medium';
+
+      // Reset Step Indicators
+      updateStepUI(1, 'running', 'Inspecting photo with Multimodal Vision analysis...');
+      updateStepUI(2, 'waiting', 'Pending Ward & Department resolution...');
+      updateStepUI(3, 'waiting', 'Pending ticket generation...');
+
+      const formData = new FormData();
+      if (selectedFile) {
+        formData.append('photo', selectedFile);
+      }
+      if (selectedSampleType) {
+        formData.append('sampleType', selectedSampleType);
+      }
+      formData.append('area', area);
+      if (customTitle) formData.append('customTitle', customTitle);
+      if (activeApiKey) formData.append('userApiKey', activeApiKey);
+
+      try {
+        // Step 1 UI progress simulation for visual impact
+        setTimeout(() => {
+          updateStepUI(1, 'completed', 'Identified category, confidence score & severity.');
+          updateStepUI(2, 'running', `Resolving Ward & Department for "${area}"...`);
+        }, 800);
+
+        setTimeout(() => {
+          updateStepUI(2, 'completed', 'Ward & Department mapped with Corporator & SLA.');
+          updateStepUI(3, 'running', 'Registering in AMC Grievance ledger & drafting Tweet...');
+        }, 1600);
+
+        const response = await fetch('/api/agent/file-complaint', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to file complaint');
+        }
+
+        setTimeout(() => {
+          updateStepUI(3, 'completed', `Filed ticket ${data.ticket.ticketId}. Status: ${data.ticket.status}.`);
+          document.getElementById('pipelineStatusBadge').textContent = 'Agent Pipeline Completed';
+          document.getElementById('pipelineStatusBadge').className = 'text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full font-mono font-medium';
+
+          // Show Result Ticket Box
+          const ticketBox = document.getElementById('ticketResultBox');
+          ticketBox.classList.remove('hidden');
+
+          document.getElementById('resTicketId').textContent = data.ticket.ticketId;
+          document.getElementById('resWardName').textContent = `${data.ticket.location.wardName} (${data.ticket.location.zone})`;
+          document.getElementById('resDeptName').textContent = data.ticket.department.name;
+          document.getElementById('resSla').textContent = `${data.ticket.slaHours} Hours`;
+          document.getElementById('resOfficer').textContent = data.ticket.department.officer;
+
+          const sevBadge = document.getElementById('resSeverityBadge');
+          sevBadge.textContent = data.ticket.severity;
+          sevBadge.className = data.ticket.severity === 'CRITICAL' ? 'text-[10px] px-2 py-0.5 rounded font-bold uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'text-[10px] px-2 py-0.5 rounded font-bold uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30';
+
+          // Social Post requirement
+          document.getElementById('resSocialText').textContent = `"${data.ticket.socialPost.text}"`;
+          document.getElementById('tweetNowBtn').href = data.ticket.socialPost.tweetUrl;
+
+          // Auto inject chat notice
+          appendChatMessage('bot', `✅ **Ticket Registered**: Filed **${data.ticket.ticketId}** for *${data.ticket.issueTitle}* in **${data.ticket.location.wardName}**. Assigned to **${data.ticket.department.name}**.`);
+
+          // Refresh database view
+          refreshTickets();
+        }, 2200);
+
+      } catch (err) {
+        alert('Agent execution error: ' + err.message);
+        document.getElementById('pipelineStatusBadge').textContent = 'Error Encountered';
+      }
+    }
+
+    function updateStepUI(stepNum, state, detail) {
+      const card = document.getElementById(`stepCard${stepNum}`);
+      const icon = document.getElementById(`stepIcon${stepNum}`);
+      const text = document.getElementById(`stepDetail${stepNum}`);
+
+      text.textContent = detail;
+
+      if (state === 'running') {
+        icon.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-amber-400"></i>';
+        card.className = 'p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/40 flex items-start space-x-3 transition shadow-lg shadow-amber-500/5';
+      } else if (state === 'completed') {
+        icon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
+        card.className = 'p-3.5 rounded-xl bg-slate-900/90 border border-emerald-500/30 flex items-start space-x-3 transition';
+      } else {
+        icon.innerHTML = '<i class="fa-solid fa-clock text-slate-600"></i>';
+        card.className = 'p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start space-x-3 transition';
+      }
+    }
+
+    // Conversational Status Agent Handlers
+    async function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      input.value = '';
+      appendChatMessage('user', msg);
+
+      try {
+        const res = await fetch('/api/agent/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg })
+        });
+        const data = await res.json();
+        
+        if (data.success && data.ticket) {
+          const t = data.ticket;
+          const reply = `📌 **${t.ticketId}**: ${t.issueTitle}
+• **Status**: ${t.status}
+• **Ward**: ${t.location.wardName} (${t.location.zone})
+• **Department**: ${t.department.name}
+• **Estimated SLA**: ${t.slaHours} hrs`;
+          appendChatMessage('bot', reply);
+        } else {
+          appendChatMessage('bot', data.message || 'Could not find ticket details.');
+        }
+      } catch (err) {
+        appendChatMessage('bot', 'Error communicating with status agent.');
+      }
+    }
+
+    function askQuickPrompt(text) {
+      document.getElementById('chatInput').value = text;
+      handleChatSubmit(new Event('submit'));
+    }
+
+    function appendChatMessage(sender, text) {
+      const container = document.getElementById('chatMessages');
+      const isUser = sender === 'user';
+
+      const wrap = document.createElement('div');
+      wrap.className = `flex items-start space-x-2 ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`;
+
+      const avatar = document.createElement('div');
+      avatar.className = `w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] shrink-0 font-bold ${isUser ? 'bg-blue-600' : 'bg-indigo-600'}`;
+      avatar.textContent = isUser ? 'ME' : 'AI';
+
+      const bubble = document.createElement('div');
+      bubble.className = isUser 
+        ? 'bg-blue-600 text-white p-2.5 rounded-xl rounded-tr-none text-xs leading-relaxed max-w-[85%]'
+        : 'bg-slate-800/90 border border-slate-700 p-2.5 rounded-xl rounded-tl-none text-slate-300 text-xs leading-relaxed max-w-[85%]';
+      
+      // Convert markdown bold to html bold
+      const formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>').replace(/\n/g, '<br>');
+      bubble.innerHTML = formatted;
+
+      wrap.appendChild(avatar);
+      wrap.appendChild(bubble);
+      container.appendChild(wrap);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    // Refresh tickets in AMC mock database
+    async function refreshTickets() {
+      const container = document.getElementById('ticketsList');
+      try {
+        const res = await fetch('/api/tickets');
+        const data = await res.json();
+        const tickets = data.tickets || [];
+
+        if (tickets.length === 0) {
+          container.innerHTML = '<div class="text-center py-4 text-xs text-slate-500">No complaints registered yet.</div>';
+          return;
+        }
+
+        container.innerHTML = tickets.map(t => {
+          let badgeClass = 'badge-pothole';
+          if (t.category === 'garbage_dump') badgeClass = 'badge-garbage';
+          if (t.category === 'broken_streetlight') badgeClass = 'badge-light';
+          if (t.category === 'water_logging') badgeClass = 'badge-drainage';
+
+          return `
+            <div onclick="askQuickPrompt('Status of ${t.ticketId}')" class="p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-800 cursor-pointer transition">
+              <div class="flex items-center justify-between mb-1">
+                <span class="font-mono font-bold text-xs text-indigo-400">${t.ticketId}</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase ${badgeClass}">${t.category.replace('_', ' ')}</span>
+              </div>
+              <p class="text-xs font-medium text-slate-200 truncate">${t.issueTitle}</p>
+              <div class="flex items-center justify-between mt-1.5 text-[10px] text-slate-400">
+                <span>📍 ${t.location.wardName}</span>
+                <span class="text-emerald-400 font-semibold">${t.status}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        container.innerHTML = '<div class="text-xs text-rose-400 text-center py-2">Error loading tickets</div>';
+      }
+    }
+
+    // Initial load
+    refreshTickets();
+  </script>
+</body>
+</html>

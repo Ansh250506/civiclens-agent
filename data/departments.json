@@ -1,0 +1,38 @@
+[
+  {
+    "id": "DEPT_ROADS",
+    "name": "Roads & Bridges Project Department",
+    "categories": ["pothole", "broken_road", "manhole", "footpath_damage", "speedbreaker"],
+    "officer": "Executive Engineer (Civil/Roads)",
+    "officialTwitter": "@AMC_Roads",
+    "slaHours": 48,
+    "escalationLevel": "Deputy Municipal Commissioner (Engineering)"
+  },
+  {
+    "id": "DEPT_SWM",
+    "name": "Solid Waste Management (Swachh Bharat Cell)",
+    "categories": ["garbage_dump", "overflowing_dustbin", "dead_animal", "illegal_dumping", "litter"],
+    "officer": "Chief Sanitation Officer",
+    "officialTwitter": "@SwachhAhmedabad",
+    "slaHours": 24,
+    "escalationLevel": "Director of Solid Waste Management"
+  },
+  {
+    "id": "DEPT_LIGHT",
+    "name": "Street Lighting & Electrical Department",
+    "categories": ["broken_streetlight", "street_light_off", "hanging_wire", "transformer_spark"],
+    "officer": "Deputy Engineer (Light)",
+    "officialTwitter": "@AMC_Electric",
+    "slaHours": 24,
+    "escalationLevel": "Superintending Engineer (E&M)"
+  },
+  {
+    "id": "DEPT_DRAINAGE",
+    "name": "Water Drainage & Sewerage Department",
+    "categories": ["water_logging", "drainage_overflow", "blocked_stormwater", "contaminated_water"],
+    "officer": "Executive Engineer (Drainage)",
+    "officialTwitter": "@AMC_Drainage",
+    "slaHours": 36,
+    "escalationLevel": "City Engineer (Water & Drainage)"
+  }
+]

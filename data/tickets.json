@@ -1,0 +1,90 @@
+[
+  {
+    "ticketId": "AMC-2026-8941",
+    "createdAt": "2026-10-23T10:15:00.000Z",
+    "updatedAt": "2026-10-24T09:30:00.000Z",
+    "category": "pothole",
+    "issueTitle": "Deep Hazardous Pothole on High-Traffic Corridor",
+    "description": "Severe road crater approx 1.5m wide causing two-wheeler skids and traffic slowdown.",
+    "severity": "CRITICAL",
+    "location": {
+      "area": "Sindhu Bhavan Road, near Taj Skyline",
+      "wardId": "W-02",
+      "wardName": "Bodakdev & Vastrapur",
+      "zone": "North-West Zone"
+    },
+    "department": {
+      "id": "DEPT_ROADS",
+      "name": "Roads & Bridges Project Department",
+      "officer": "Executive Engineer (Civil/Roads)"
+    },
+    "status": "IN_PROGRESS",
+    "timeline": [
+      {
+        "status": "FILED",
+        "timestamp": "2026-10-23T10:15:00.000Z",
+        "note": "AI Agent registered ticket automatically via CivicLens inspection photo."
+      },
+      {
+        "status": "ASSIGNED",
+        "timestamp": "2026-10-23T12:00:00.000Z",
+        "note": "Assigned to Junior Engineer (Bodakdev Road Repair Unit #4)."
+      },
+      {
+        "status": "IN_PROGRESS",
+        "timestamp": "2026-10-24T09:30:00.000Z",
+        "note": "Asphalt patch truck dispatched to site. Repair work scheduled to complete by evening."
+      }
+    ],
+    "slaHours": 48,
+    "eta": "2026-10-25T10:15:00.000Z",
+    "socialPost": {
+      "text": "📢 Grievance Filed #AMC-2026-8941: Deep pothole on Sindhu Bhavan Road! Requesting swift action from @AmdavadAMC @AMC_Roads & Corporator @BhavnaDave_AMC #CivicLens #AhmedabadRoads",
+      "tags": ["@AmdavadAMC", "@AMC_Roads", "@BhavnaDave_AMC"]
+    }
+  },
+  {
+    "ticketId": "AMC-2026-7822",
+    "createdAt": "2026-10-22T08:00:00.000Z",
+    "updatedAt": "2026-10-23T16:00:00.000Z",
+    "category": "garbage_dump",
+    "issueTitle": "Massive Overflowing Garbage Pile Blocking Pedestrian Path",
+    "description": "Unattended municipal bin overflowing with mixed waste, bad odor and stray animals.",
+    "severity": "HIGH",
+    "location": {
+      "area": "Navrangpura, CG Road near Municipal Market",
+      "wardId": "W-01",
+      "wardName": "Navrangpura",
+      "zone": "West Zone"
+    },
+    "department": {
+      "id": "DEPT_SWM",
+      "name": "Solid Waste Management (Swachh Bharat Cell)",
+      "officer": "Chief Sanitation Officer"
+    },
+    "status": "RESOLVED",
+    "timeline": [
+      {
+        "status": "FILED",
+        "timestamp": "2026-10-22T08:00:00.000Z",
+        "note": "AI Agent auto-routed complaint to Solid Waste Management."
+      },
+      {
+        "status": "IN_PROGRESS",
+        "timestamp": "2026-10-22T14:30:00.000Z",
+        "note": "Compactor truck and sanitization team deployed."
+      },
+      {
+        "status": "RESOLVED",
+        "timestamp": "2026-10-23T16:00:00.000Z",
+        "note": "Area cleared, disinfected with lime powder, and dual dustbins installed."
+      }
+    ],
+    "slaHours": 24,
+    "eta": "Completed",
+    "socialPost": {
+      "text": "🚨 Swachhata Alert #AMC-2026-7822: Mixed garbage accumulation near CG Road Market cleared! cc: @AmdavadAMC @SwachhAhmedabad @RameshPatel_AMC #CleanAhmedabad",
+      "tags": ["@AmdavadAMC", "@SwachhAhmedabad", "@RameshPatel_AMC"]
+    }
+  }
+]
